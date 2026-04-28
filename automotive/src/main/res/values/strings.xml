@@ -1,0 +1,27 @@
+<resources>
+    <string name="toast.connection.disconnect">Stopping connection with the Adapter</string>
+    <string name="pref.aa.car_error">An error occurred during OBD2 PIDs/Sensors loading</string>
+    <string name="pref.aa.get_to_app_conf">AA preferences are opened in the mobile app\n Go there to edit App settings</string>
+    <string name="app_name">Giulia IOT Monitor</string>
+
+    <string name="routine.workflow_is_not_running">Please connect to the OBD Adapter first.</string>
+    <string name="routine.unknown_error">Unknown error.</string>
+    <string name="routine.page_title">Available Routines</string>
+    <string name="routine.page_connecting">Connecting, please wait....</string>
+    <string name="routine.execution_start">Routine is being executed, please wait....</string>
+    <string name="routine.execution_failed">Routine execution failed.</string>
+    <string name="routine.executed_successfully">Routine has been executed successfully.</string>
+    <string name="routine.no_data">No data received from the ECU. Probably there is no connection to ECU established.</string>
+
+    <string name="available_features.page_title">Available screens</string>
+    <string name="available_features.routine_screen.title">Routines</string>
+    <string name="available_features.drag_race_screen.title">Drag Racing</string>
+    <string name="available_features.performance_screen.title">Performance</string>
+    <string name="available_features.giulia_screen.title">Giulia</string>
+    <string name="available_features.gauge_screen.title">Gauge</string>
+    <string name="available_features.trip_info_screen.title">Trip Info</string>
+
+    <string name="aa_stat_min">min</string>
+    <string name="aa_stat_avg">avg</string>
+    <string name="aa_stat_max">max</string>
+</resources>

@@ -1,0 +1,803 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <string name="pref.performance.screen_label_y_padding"><b><i>Gauge</i></b> label top offset</string>
+    <string name="pref.performance.screen_top_margin">Top margin</string>
+
+    <string name="pref.dialog.screen.lock.timeout_message">Timeout waiting for response</string>
+    <string name="pref.dialog.screen.lock.message">Please wait. This may take a while....</string>
+    <string name="pref.experimental_switch_network_enabled">This is an EXPERIMENTAL feature, controlled by the FF_SWITCH_NETWORK_ENABLED feature flag</string>
+    <string name="pref.experimental_result_cache_enabled">This is an EXPERIMENTAL feature, controlled by FF_RESULT_CACHE_ENABLED Feature Flag</string>
+    <string name="pref.experimental_read_external_storage_enabled">This is an EXPERIMENTAL feature, controlled by FF_PID_EXTERNAL_STORAGE_ENABLED Feature Flag</string>
+
+    <string name="permissions.missing.bt_msg">Granting Bluetooth permissions is necessary to establish a connection with the BT adapter.</string>
+
+    <string name="app_name">My UP</string>
+    <string name="navigation.title_gauge">Gauge</string>
+    <string name="navigation.title_giulia">Giulia</string>
+    <string name="navigation.title_preferences">Prefs</string>
+    <string name="navigation.title_dashboard">Dashboard</string>
+
+    <string name="navigation.title_UP">UP</string>
+    <string name="navigation.title_drag_racing">Drag Racing</string>
+    <string name="navigation.title_trip_info">Trip Info</string>
+    <string name="navigation.title_performance">Performance</string>
+
+    <string name="navigation.title_graph">Graph</string>
+    <string name="navigation.title_aa">Android Auto</string>
+    <string name="navigation.tooltip_gauge">Gauge view</string>
+    <string name="navigation.tooltip_giulia_dashboard">Giulia dashboard view</string>
+    <string name="navigation.tooltip_preferences">Preferences view</string>
+    <string name="navigation.tooltip_dashboard">Dashboard view</string>
+    <string name="navigation.tooltip_UP_dashboard">UP dashboard view</string>
+
+    <string name="navigation.tooltip_graph">Graph view</string>
+
+
+    <string name="pid.metric_name">Metric</string>
+    <string name="pid.value">Value</string>
+    <string name="pid.value_no_data">No data</string>
+    <string name="pid.value_min">Min</string>
+    <string name="pid.value_avg">Avg</string>
+    <string name="pid.value_max">Max</string>
+    <string name="pid.mode">Mode</string>
+
+    <string name="context_menu.UP_parameters_id_to_display">Customize visible UP PIDs</string>
+    <string name="context_menu.giulia_parameters_id_to_display">Customize visible Giulia PIDs</string>
+    <string name="context_menu.gauge_parameters_id_to_display">Customize visible Gauge PIDs</string>
+
+    <string name="context_menu.parameters_id_to_query">Manage OBD2 PIDs settings</string>
+    <string name="context_menu.parameters_id_to_display">Customize visible OBD2 PIDs</string>
+    <string name="context_menu.view_configuration">Current View Settings</string>
+    <string name="context_menu.profiles">Vehicle Profiles</string>
+    <string name="context_menu.about">About</string>
+    <string name="context_menu.custom_action_1">Custom</string>
+    <string name="context_menu.drag_racing">Drag Racing View</string>
+    <string name="context_menu.trip_info">Trip Info View</string>
+    <string name="context_menu.performance">Performance View</string>
+    <string name="context_menu.extra_views">Extra Views</string>
+
+
+    <string name="pref.displayed_parameter_ids">Customize visible OBD2 PIDs</string>
+    <string name="pref.displayed_parameter_ids_summary">Pick the OBD2 sensors or PIDs you would like to view on the screen</string>
+
+
+    <string name="pref.aa.performance.displayed_parameter_ids">Customize collected and visible OBD2 PIDs</string>
+    <string name="pref.aa.performance.displayed_parameter_ids_summary">Select the OBD2 sensors or PIDs you want to see. <font color="#C22636">Note: Diagnostic PIDs (like RPM, Spark Advance, MFA) are logged for data collection only and will not be visible on the dashboard.</font></string>
+    <string name="pref.pids.edit">Modify individual alert thresholds</string>
+    <string name="pref.pids.edit_summary">Adjust the configuration of individual PIDs, including setting alert thresholds.</string>
+
+    <string name="pref.pids_generic_high">Choose Fast-Updating OBD2 Data to Show</string>
+    <string name="pref.pids_generic_high_summary">Pick the high-frequency OBD2 sensors or PIDs you would like to retrieve from the ECU.</string>
+    <string name="pref.pids_generic_low">Choose Slow-Updating OBD2 Data to Show</string>
+    <string name="pref.pids_generic_low_summary">Pick the low-frequency OBD2 sensors or PIDs you would like to retrieve from the ECU.</string>
+
+    <string name="prefs.adapter_batch_mode_01_batch_size">Batch Size for Mode 01</string>
+    <string name="prefs.adapter_batch_mode_22_batch_size">Batch Size for Mode 22</string>
+    <string name="pref.adapter_batch_enabled">Enable batch mode</string>
+    <string name="pref.adapter_batch_strict_validation_enabled">Enable strict messages validation</string>
+    <string name="pref.adapter_batch_strict_validation_enabled_summary">Ignores OBD2 responses with structural errors.</string>
+
+    <string name="pref.adapter_stn_enabled">Enable STN extensions</string>
+    <string name="pref.adapter_stn_ignore_pids_priorities">Ignore PID priorities (STN)</string>
+    <string name="pref.adapter_stn_ignore_pids_priorities_summary">Ignores individual PID priorities, combining fast and slow PIDs into a single ECU request. This may improve performance in some cases.</string>
+
+    <string name="pref.adapter_stn_enabled_summary">Enable this only if you are using an STNxx-based adapter—doing so may boost performance by using chip-specific commands. Using it with other adapters may lead to errors </string>
+    <string name="pref.adapter_cache_result_enabled">Enable result cache</string>
+    <string name="pref.adapter_adaptive_enabled">Enable adaptive timeout</string>
+    <string name="pref.adapter_adaptive_enabled_summary">When enabled, the software will attempt to insert optimal delays between consecutive commands to enhance performance</string>
+    <string name="pref.adapter_reconnect">Automatically reconnect the OBD2 adapter when a connection error occurs.</string>
+    <string name="pref.adapter_reconnect_summary">Automatically restore OBD2 connection if Lost</string>
+
+    <string name="pref.adapter_reconnect_max_retry">Maximum reconnect attempts</string>
+    <string name="pref.adapter.query.view_individual.enabled">Retrieve Data Based on What\'s Shown on the current Screen</string>
+    <string name="pref.adapter.query.view_individual.enabled_summary">Fetch from ECU only PIDs shown on current screen to boost performance—recommended for slow adapters. Note: this disables high/low freq PIDs polling.</string>
+    <string name="pref.adapter.query.view_individual.dialog_disabled_warning">This setting is disabled because individual query strategy is enabled.</string>
+
+    <string name="pref.adapter.collect.gps.enabled_summary">Collect and log GPS coordinates alongside vehicle data. Note that <b>Location</b> services must be enabled for data collection to occur.</string>
+    <string name="pref.adapter.collect.gps.enabled_title">Enable GPS Logging</string>
+
+    <string name="pref.adapter.collect.gps.enabled.dialog_title">Enable GPS Logging?</string>
+    <string name="pref.adapter.collect.gps.enabled.dialog_summary">Enabling GPS logging will consume significantly more battery. Are you sure you want to continue?</string>
+
+    <string name="pref.connection.auto_connect.category">Auto-connect</string>
+    <string name="pref.connection.category">OBD2 Adapter Connection</string>
+    <string name="pref.connection.category.summary">This section contains settings related to your adapter type. Here, you can configure the Wi-Fi or Bluetooth parameters of your adapter.</string>
+
+    <string name="pref.connection.connection_type_dialog">Select OBD adapter connection type</string>
+    <string name="pref.connection.connection_type"><b><font color='#01804F'>OBD adapter connection type</font></b></string>
+    <string name="pref.connection.connection_timeout">Connection timeout</string>
+
+    <string name="pref.adapter_id">Available bluetooth devices</string>
+    <string name="pref.gauge.number_of_columns">Number of columns</string>
+    <string name="pref.gauge.font_size">Font size</string>
+
+
+    <string name="pref.gauge_display_scrollbar">Display scrollbar</string>
+    <string name="pref.gauge_display_refresh_rate">Display refresh rate (PIDs/second)</string>
+    <string name="pref.gauge_display_scale">Display OBD2 PIDs/Sensors scale</string>
+    <string name="pref.gauge_background_color">Background color</string>
+    <string name="pref.toolbar.toggle_double_click">Toggle toolbar on double click</string>
+
+    <string name="pref.adapter.diagnostic_request_id.mapping.category">Configure Diagnostic Request ID mapping</string>
+    <string name="pref.adapter.diagnostic_request_id.select_key">Select Diagnostic Request ID key</string>
+    <string name="pref.adapter.diagnostic_request_id.set_new_value">Set Diagnostic Request ID value for the selected key</string>
+    <string name="pref.adapter.diagnostic_request_id.set_key">Update Diagnostic Request ID key</string>
+    <string name="pref.adapter.diagnostic_request_id.add_new_value">Add new Diagnostic Request ID value</string>
+    <string name="pref.adapter.diagnostic_request_id.values.category">Configure Diagnostic Request ID values</string>
+    <string name="pref.adapter.diagnostic_request_id.keys.category">Configure Diagnostic Request ID keys</string>
+
+    <string name="pref.pids.group.enableCapabilitiesReadings">Enable Vehicle supported OBD2 PIDs/Sensors readings</string>
+    <string name="pref.pids.group.enableMetadataReadings">Enable Vehicle metadata readings</string>
+    <string name="pref.pids.group.dtc.available_message">DTC are available.Please check DTC section</string>
+
+    <string name="pref.pids.group.enableMetadataReadings_summary">When enabled, vehicle metadata will be retrieved during the ECU session.</string>
+    <string name="pref.pids.group.enableCapabilitiesReadings_summary">Enabling this option will allow supported OBD2 PIDs/Sensors to be read during the session with the ECU.</string>
+
+    <string name="pref.screen.fps">Screen refresh rate (FPS)</string>
+
+    <!-- Android Auto -->
+    <string name="pref.aa.virtual_screens.screen.max_items">Max visible metrics</string>
+    <string name="pref.aa.giulia.displayed_parameter_ids_summary">Choose OBD2 PIDs/Sensors for <b>Giulia</b> screen</string>
+    <string name="pref.aa.UP.displayed_parameter_ids_summary">Choose OBD2 PIDs/Sensors for <b>UP</b> screen</string>
+    <string name="pref.aa.gauge.displayed_parameter_ids_summary">Choose OBD2 PIDs/Sensors for <b>Gauge</b> screen</string>
+
+    <string name="pref.aa.gauge.displayed_parameter_ids">Customize visible <b>Gauge</b> OBD2 PIDs</string>
+    <string name="pref.aa.giulia.displayed_parameter_ids">Customize visible <b>Giulia</b> OBD2 PIDs</string>
+    <string name="pref.aa.UP.displayed_parameter_ids">Customize visible <b>UP</b> OBD2 PIDs</string>
+
+
+    <string name="pref.aa.profile_1.displayed_parameter_ids">Edit Virtual Screen 1</string>
+    <string name="pref.aa.profile_2.displayed_parameter_ids">Edit Virtual Screen 2</string>
+    <string name="pref.aa.profile_3.displayed_parameter_ids">Edit Virtual Screen 3</string>
+    <string name="pref.aa.profile_4.displayed_parameter_ids">Edit Virtual Screen 4</string>
+    <string name="pref.aa.theme.progress_bar_color">Progress bar color</string>
+    <string name="pref.aa.theme.divider_color">Divider color</string>
+    <string name="pref.aa.theme.current_value_color">Current value color</string>
+    <string name="pref.aa.theme.inalert_value_color">In alert value color</string>
+    <string name="pref.aa.theme.virtual_screen_color">Virtual screen buttons color</string>
+
+    <string name="pref.aa.virtual_screens.split_pids_labels.category">Split PIDs label</string>
+    <string name="pref.aa.virtual_screens.split_pids_labels.category.summary">Enable the option to display PID labels in two lines per virtual screen.</string>
+
+    <string name="pref.aa.virtual_screens.split_pids_labels.1">Split PIDs label into 2 lines for screen 1</string>
+    <string name="pref.aa.virtual_screens.split_pids_labels.2">Split PIDs label into 2 lines for screen 2</string>
+    <string name="pref.aa.virtual_screens.split_pids_labels.3">Split PIDs label into 2 lines for screen 3</string>
+    <string name="pref.aa.virtual_screens.split_pids_labels.4">Split PIDs label into 2 lines for screen 4</string>
+
+
+    <string name="pref.aa.surface.fps.display_status">Display Head unit refresh rate (FPS)</string>
+
+    <string name="pref.aa.renderer_type">Screen type</string>
+    <string name="pref.aa.renderer.gauge.progress_type"><b><i>Gauge</i></b> screen progress bar type</string>
+    <string name="pref.aa.renderer.gauge.top_offset"><b><i>Gauge</i></b> screen label top offset</string>
+    <string name="pref.aa.renderer.gauge.top_offset.1"><b><i>Gauge</i></b> screen label top offset for screen 1</string>
+    <string name="pref.aa.renderer.gauge.top_offset.2"><b><i>Gauge</i></b> screen label top offset for screen 2</string>
+    <string name="pref.aa.renderer.gauge.top_offset.3"><b><i>Gauge</i></b> screen label top offset for screen 3</string>
+    <string name="pref.aa.renderer.gauge.top_offset.4"><b><i>Gauge</i></b> screen label top offset for screen 4</string>
+
+    <string name="pref.aa.renderer.gauge.top_offset_summary">Choose label top offset each individual virtual screen</string>
+
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.category">Number of columns</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.category.summary">Choose number of columns for each individual virtual screen</string>
+
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.1">Number of columns for screen 1</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.2">Number of columns for screen 2</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.3">Number of columns for screen 3</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.4">Number of columns for screen 4</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.5">Number of columns for screen 5</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.6">Number of columns for screen 6</string>
+    <string name="pref.aa.virtual_screens.number_of_items_in_column.7">Number ofs columns for screen 7</string>
+
+    <string name="pref.aa.gauge.category">Gauge</string>
+
+    <string name="pref.aa.virtual_screens.category">UP</string>
+
+    <string name="pref.aa.virtual_screens.visibility.category">Visibility</string>
+    <string name="pref.aa.virtual_screens.visibility.category.summary">Choose how many virtual screens should be rendered</string>
+    <string name="pref.aa.virtual_screens.visibility.1">Enable screen 1</string>
+    <string name="pref.aa.virtual_screens.visibility.2">Enable screen 2</string>
+    <string name="pref.aa.virtual_screens.visibility.3">Enable screen 3</string>
+    <string name="pref.aa.virtual_screens.visibility.4">Enable screen 4</string>
+
+
+    <string name="pref.aa.virtual_screens.font_size.category">Font size</string>
+    <string name="pref.aa.giulia.virtual_screens.font_size.category">Giulia screen font size</string>
+    <string name="pref.aa.gauge.virtual_screens.font_size.category">Gauge screen font size</string>
+    <string name="pref.aa.UP.virtual_screens.font_size.category">UP screen font size</string>
+
+    <string name="pref.aa.virtual_screens.font_size.category.summary">Choose font size for each individual virtual screen</string>
+    <string name="pref.aa.font_size.1">Font size for displaying OBD2 PIDs/Sensors on Screen 1.</string>
+    <string name="pref.aa.font_size.2">Font size for displaying OBD2 PIDs/Sensors on Screen 2.</string>
+    <string name="pref.aa.font_size.3">Font size for displaying OBD2 PIDs/Sensors on Screen 3.</string>
+    <string name="pref.aa.font_size.4">Font size for displaying OBD2 PIDs/Sensors on Screen 4.</string>
+    <string name="pref.aa.font_size.5">Font size for displaying OBD2 PIDs/Sensors on Screen 5.</string>
+    <string name="pref.aa.font_size.6">Font size for displaying OBD2 PIDs/Sensors on Screen 6.</string>
+    <string name="pref.aa.font_size.7">Font size for displaying OBD2 PIDs/Sensors on Screen 7.</string>
+    <string name="pref.aa.display_pid_history">Show collected minimum and maximum PID values</string>
+    <string name="pref.aa.display_pid_scale">Display PIDs scale</string>
+
+    <string name="pref.aa.screen.load_last_visited.enabled">Automatically load the previously used screen.</string>
+    <string name="pref.aa.display_status_panel">Display status panel</string>
+    <string name="pref.aa.connect_dialog.enabled">Display the connection dialog while establishing a connection with the OBD2 adapter</string>
+    <string name="pref.aa.virtual_screens.sort_order.enabled">Enable PIDs sort order</string>
+    <string name="pref.aa.virtual_screens.sort_order.enabled_summary">This is an EXPERIMENTAL feature.\nIt allows you to define the order of PIDs on the screen using drag-and-drop within the PID selection list. An app restart is required after enabling this option.</string>
+
+    <string name="pref.aa.title">Android Auto</string>
+
+    <string name="pref.aa.debug_category">Debug</string>
+    <string name="pref.aa.general_category">General app settings</string>
+
+    <string name="pref.aa.general_views_category">General views settings </string>
+
+
+    <string name="pref.aa.performance.category">Performance Screen</string>
+
+    <string name="pref.aa.performance.brake_boosting.enabled">Enable Brake-Boosting assistance</string>
+    <string name="pref.aa.performance.brake_boosting.enabled_summary">When enabled, brake boosting assistance displays full-screen gauges for gas pedal position and gearbox torque. Note: You must collect the Vehicle Speed PID for this feature to work.</string>
+
+    <string name="pref.aa.performance.enabled">Enable performance screen</string>
+    <string name="pref.aa.performance.enabled_summary">Activates the Performance screen, which displays a predefined set of metrics tailored for 2.0 GME engines.</string>
+    <string name="pref.aa.performance.select_pids">Select Performance OBD2 PIDs</string>
+
+
+    <string name="pref.aa.trip_info.category">Trip Info Screen</string>
+    <string name="pref.aa.trip_info.enabled">Enable trip info screen</string>
+    <string name="pref.aa.trip_info.enabled_summary">Activates the Trip Info screen, which displays a predefined set of metrics tailored for 2.0 GME engines.</string>
+    <string name="pref.aa.trip_info.select_pids">Select TripInfo OBD2 PIDs</string>
+
+    <string name="pref.aa.routines.category">Routines</string>
+    <string name="pref.aa.routines.enabled">Enable routines screen</string>
+    <string name="pref.aa.routines.enabled.enabled_summary">Activates the Routines screen, which permits execution of specific ECU functions. Use of this feature carries risk and is entirely at your own responsibility.</string>
+    <string name="pref.aa.performance_meter.category">Drag Racing</string>
+    <string name="pref.aa.performance_meter.metrics_read_freq">Desired OBD2 Data reading frequency</string>
+    <string name="pref.aa.performance_meter.display_frequency">Display OBD2 Data read frequency</string>
+    <string name="pref.aa.performance_meter.display_vehicle_speed_measurement">Displays the vehicle speed corresponding to the recorded measurement.</string>
+    <string name="pref.aa.performance_meter.shift_lights_enabled">Enable gear shift lights</string>
+
+    <string name="pref.aa.drag_race.brake_boosting.enabled">Enable Brake-Boosting assistance</string>
+    <string name="pref.aa.drag_race.brake_boosting.enabled_summary">When enabled, the brake boosting assistance feature displays full-screen gauges for gas pedal position and gearbox torque.</string>
+
+
+    <string name="pref.profile.2_0_GME_extension.enabled">Display additional Gauges with metrics</string>
+    <string name="pref.profile.2_0_GME_extension.enabled_summary">For 2.0 GME engines, you can now gather additional metrics such as intake pressure, ambient temperature, and pressure during performance measurements. With STNxxx extensions, engine torque and gas pedal is also displayed, which is useful for brake boosting</string>
+
+    <string name="pref.aa.performance_meter.shift_lights_enabled_summary">This is an EXPERIMENTAL feature.\nEnable gear shift lights</string>
+    <string name="pref.aa.performance_meter.display_context_metrics">Display Gauges for context metrics</string>
+    <string name="pref.aa.performance_meter.display_context_metrics_summary">Provides supplementary context data, including vehicle speed.</string>
+
+
+    <string name="ref.aa.performance_meter.shift_lights.rev">Shift lights revs threshold</string>
+
+    <string name="pref.aa.renderer.category">Screen settings</string>
+
+    <string name="pref.aa.alerting.enabled">Enable Alerting</string>
+    <string name="pref.aa.alerting.enabled_summary">When enabled, additional information is displayed on the screen if a PID exceeds its defined upper or lower threshold—for example, OIL_TEMP > 110</string>
+
+    <string name="pref.aa.alerting.legend.enabled">Enable Alerting Legend</string>
+    <string name="pref.aa.alerting.legend.enabled_summary">When enabled, alert rules are shown on the screen if available for the selected PID—for example, ENGINE_TEMP > 110</string>
+
+    <string name="pref.aa.theme.background.enabled">Background enabled</string>
+
+    <string name="pref.aa.theme.dynamic_selector.enabled">Dynamic selector enabled</string>
+    <string name="pref.aa.theme.dynamic_selector.enabled_summary">When enabled, colors are applied according to the selected dynamic mode: SPORT, NORMAL, or ECO.</string>
+
+    <!-- DTC -->
+    <string name="pref.dtc.title">Diagnostic Trouble Codes</string>
+    <string name="pref.dtc.code">Code</string>
+    <string name="pref.dtc.description">Description</string>
+    <string name="pref.dtc.no_dtc_found">No Diagnosis Trouble Code (DTC) found.</string>
+    <string name="pref.dtc.enable_automatic_cleanup">Enable Automatic DTC cleanup</string>
+    <string name="pref.dtc.enable_automatic_cleanup_summary">Automatically clears Diagnostic Trouble Codes (DTCs) from the ECU memory.</string>
+    <string name="pref.dtc.settings_summary"><b>Tap</b> to view active Diagnostic Trouble Codes (DTCs) retrieved from the ECU.</string>
+    <string name="pref.dtc.settings">View Current DTCs</string>
+    <string name="pref.dtc.read_snapshots">Read DTC snapshots</string>
+    <string name="pref.dtc.read_snapshots_summary">Reads additional context data when DTC was taken.</string>
+    <string name="pref.dtc.enable_dtc_reading">Enable Automatic DTC readings</string>
+    <string name="pref.dtc.enable_dtc_reading_summary">Read Diagnostic Trouble Codes (DTCs) while connected to the ECU.</string>
+    <string name="pref.dtc.show_notification">Enable DTC notifications</string>
+    <string name="pref.dtc.show_notification_summary">Sends an alert when new Diagnostic Trouble Codes (DTCs) are found.</string>
+
+    <string name="pref.dtc.clean_dialog.confirm_message">Are you sure you want to clear all DTCs from the ECU?\n\nMake sure the engine is OFF, but the ignition is ON.</string>
+    <string name="pref.dtc.clean_dialog.send_message">Clear command sent to ECU</string>
+    <string name="pref.dtc.clean_dialog.title">Clear Diagnostic Codes?</string>
+    <string name="pref.dtc.screen_lock">This might take a while. Please wait…</string>
+
+    <string name="pref.dtc.no_connection_established">There is no ECU connection established. Please connect first.</string>
+
+    <string name="pref.vehicle.metadata_title">Vehicle Metadata</string>
+    <string name="pref.vehicle.metadata.name">Name</string>
+    <string name="pref.vehicle.metadata.value">Value</string>
+
+    <string name="pref.vehicle_settings.vehicleStatusPanel">Enable vehicle status panel</string>
+    <string name="pref.vehicle_settings.vehicleStatusPanel_summary">This is an EXPERIMENTAL feature.\nEnabling it will activate the vehicle status added to the status-panel.</string>
+
+    <string name="pref.vehicle_settings.disconnect_when_off">Auto-disconnect when vehicle is turned off</string>
+    <string name="pref.vehicle_settings.disconnect_when_off_summary">This is an EXPERIMENTAL feature.\nWhen enabled, the session will automatically disconnect when the vehicle is turned off.</string>
+
+    <string name="pref.vehicle_settings.auto_connect_once_launched">Auto-connect when application is launched</string>
+    <string name="pref.vehicle_settings.auto_connect_once_launched_summary">When enabled, the session will automatically established during application startup.</string>
+
+
+    <string name="pref.adapter_init_delay">Delay after init command</string>
+    <string name="pref.adapter_delay_reset">Delay after reset command (ATZ)</string>
+
+    <string name="pref.adapter_init_protocol">Protocol</string>
+    <string name="pref.general_settings">General settings</string>
+    <string name="pref.adapter.general_settings">Advanced settings</string>
+    <string name="pref.adapter.batch_settings">Batch settings</string>
+
+    <string name="pref.registry.category">OBD2 PIDs/Sensors Registry</string>
+
+    <string name="pref.pids_category">OBD2 PIDs/Sensors</string>
+    <string name="pref.dashboard_category">Dashboard view configuration</string>
+
+    <string name="pref.UP_apply_graph_filter">Apply Filter to Graph View</string>
+    <string name="pref.giulia_apply_graph_filter">Apply Filter to Graph View</string>
+
+    <string name="pref.UP_category">UP view configuration</string>
+    <string name="pref.giulia_category">Giulia view configuration</string>
+    <string name="pref.UP.virtual_screens.number_of_items_in_column.category">Number of items in the column</string>
+    <string name="pref.giulia.virtual_screens.number_of_items_in_column.category">Number of items in the column</string>
+
+    <string name="pref.trip_info_category">TripInfo view configuration</string>
+    <string name="pref.performance_category">Performance view configuration</string>
+
+    <string name="pref.drag_racing_category">Drag racing view configuration</string>
+    <string name="pref.drag_racing.virtual_screens.number_of_items_in_column.category">Number of items in the column</string>
+    <string name="pref.drag_racing.font_size">Font size of items on the screen</string>
+
+    <string name="pref.graph.category">Graph view configuration</string>
+    <string name="pref.gauge.category">Gauge view configuration</string>
+    <string name="pref.aa.category">Android Auto view configuration</string>
+    <string name="pref.aa.category_summary">This page contains configuration settings specific to Android Auto.</string>
+
+    <string name="pref.trip_logs_upload.upload_icon">Upload Icon</string>
+    <string name="pref.trip_logs_category">Trip Logs</string>
+    <string name="pref.trip_logs_upload">Upload Trip Logs to Cloud</string>
+    <string name="pref.trip_logs_upload_details">Sync trip logs to  <font color='#01804F'>Google Drive</font>. Files are uploaded in the
+        <font color='#1C3D72'>myUP/trips</font> folder.
+        View your logs at https://my-UP.com/.
+    </string>
+
+    <string name="pref.adapter_category">OBD2 Adapter Settings</string>
+    <string name="pref.bluetooth_category">Bluetooth</string>
+    <string name="pref.usb_category">USB</string>
+    <string name="pref.usb.baud_rate">This parameter allows to set desired baud rate</string>
+    <string name="pref.usb.device_attached">USB OBD2 adapter %s has been attached</string>
+    <string name="pref.usb.device_detached">USB OBD2 adapter %s has been detached</string>
+
+    <string name="pref.wifi_category">Wifi</string>
+    <string name="pref.adapter_connection_tcp_ssid">SSID</string>
+    <string name="pref.adapter_connection_tcp_host">Host</string>
+    <string name="pref.adapter_connection_tcp_port">Port</string>
+    <string name="pref.adapter_command_freq_summary">This parameter sets the target frequency for OBD commands. It represents the desired rate but may be limited by hardware capabilities. It is recommended to use this option together with adaptive timeout.</string>
+    <string name="pref.adapter_command_freq">Desired refresh rate(PIDs/second)</string>
+
+    <string name="pref.adapter_power_connect_adapter">Automatically connect to the OBD adapter when an external power supply is detected.</string>
+    <string name="pref.adapter_power_connect_adapter_summary">When enabled, the application will automatically establish a connection with the OBD adapter upon detection of an external power supply</string>
+
+    <string name="pref.adapter_power_screen_off">Maintain screen brightness</string>
+    <string name="pref.adapter_power_screen_off_summary">When enabled, the application assumes control of screen brightness management</string>
+
+    <string name="pref.adapter_power_bt_off">Switch network Off/On</string>
+    <string name="pref.adapter_power_start_data_logging_after">The time delay in seconds after connecting to the adapter starts.</string>
+
+    <string name="pref.power_category">Power</string>
+    <string name="pref.toolbar_hide_landscape">Auto-Hide toolbar in Landscape Mode</string>
+    <string name="pref.toolbar_hide_landscape_summary">Toolbar disappears when Rotated to Landscape</string>
+    <string name="pref.toolbar_hide_doubleclick">Auto-Hide toolbar when double click</string>
+    <string name="pref.toolbar_hide_doubleclick_summary">Toolbar disappears when double click on the app</string>
+    <string name="pref.toolbar_hide_connected">Auto-Hide toolbar when connected to the adapter</string>
+    <string name="pref.toolbar_hide_connected_summary">Toolbar disappears when connection with adapter is established</string>
+
+    <string name="pref.enable_view_summary">When enabled, an extra button will appear on the taskbar, providing a shortcut to the view.</string>
+    <string name="pref.enable_view">Display view shortcut on the taskbar</string>
+
+    <string name="pref.view.navigation.navigate_to_last_visited_view">Navigate to last visited view</string>
+    <string name="pref.view.navigation.navigate_to_last_visited_view_summary">When enabled, app during startup opens last visited view</string>
+
+    <string name="pref.graph.trips_recordings_display_info">Display trip info</string>
+    <string name="pref.graph.trips_recordings_save_short_trip">Record trips shorten than 5s length (engine start)</string>
+    <string name="pref.graph.x_axis_start_moving_after_time">X-Axis start moving after</string>
+    <string name="pref.graph.x_axis_minimum_shift_time">X-Axis moving time</string>
+    <string name="pref.graph_cache_enabled">Cache enabled</string>
+    <string name="pref.graph.filter_source">Filter source. Use this parameter to configure  \"Filters\" quick menu.</string>
+    <string name="pref.graph.trips_selected">Manage recorded trips</string>
+    <string name="pref.graph.trips_selected_summary">Manage recorded Trips.\nYou are allowed to load or delete existing trip</string>
+
+    <string name="pref.graph.view.virtual_screen_2">2</string>
+    <string name="pref.graph.view.virtual_screen_3">3</string>
+    <string name="pref.graph.view.virtual_screen_1">1</string>
+    <string name="pref.graph.view.virtual_screen_4">4</string>
+    <string name="pref.graph.view.virtual_screen_5">5</string>
+    <string name="pref.graph.view.virtual_screen_reserved">Reserved</string>
+    <string name="pref.graph.view.filters">Filters</string>
+    <string name="pref.graph.view.filters_filter_1">Apply filter 1</string>
+    <string name="pref.graph.view.filters_filter_2">Apply filter 2</string>
+    <string name="pref.graph.view.filters_filter_3">Apply filter 3</string>
+    <string name="pref.graph.view.filters_filter_4">Apply filter 4</string>
+    <string name="pref.graph.view.filters_filter_5">Apply filter 5</string>
+    <string name="pref.graph.view.filters_filter_6">Apply filter 6</string>
+    <string name="pref.graph.view.filters_filter_7">Apply filter 7</string>
+
+
+    <string name="pref.debug_broadcast_fake_metrics">Enable data generator</string>
+    <string name="pref.debug_trip_save_connector_response">Save connector response</string>
+    <string name="pref.debug_logging_enabled">Enable debug logging</string>
+    <string name="pref.debug_generator_enabled">Enable data generator through obd-metrics</string>
+    <string name="pref.dash_top_values_red_color">Highlight top values</string>
+    <string name="pref.dash_enable_drag_and_drop">Enable drag and drop</string>
+    <string name="pref.dash_swipe_to_delete">Enable swipe to delete metric</string>
+    <string name="pref.dash_top_values_blink">Alarm for highest values</string>
+
+    <string name="pref.trips_category">Trips</string>
+    <string name="pref.trips.title">Recorded trips</string>
+    <string name="pref.trips.drive.auto_sync_enabled">Auto-Sync to Google Drive</string>
+    <string name="pref.trips.drive.auto_sync_enabled_summary">Automatically upload new trips to Google Drive when connected to Wi-Fi. Note: You should upload a trip manually in the app first to grant permissions.</string>
+    <string name="pref.trips.drive.auto_sync_enabled.sign_in.dialog_title">Google Drive Sign-In Required</string>
+    <string name="pref.trips.drive.auto_sync_enabled.sign_in.dialog_summary">To automatically back up your trips in the background, MyUP needs permission to save files to your Google Drive. \n\nPlease sign in with your Google account on the next screen to enable auto-sync.</string>
+
+
+    <string name="pref.view_category_summary">In this section, you can adjust settings related to the Gauge, Graph, and UP views.</string>
+    <string name="pref.view_category">Views</string>
+    <string name="pref.toolbar_category">Toolbar</string>
+    <string name="pref.toolbar_category_summary">In this section, you can configure Toolbar behaviour.</string>
+    <string name="pref.init_category">Initialization&amp;Protocols</string>
+    <string name="pref.init_category_summary">In this section, you can configure settings for the adapter initialization process, including CAN protocol and CAN headers.</string>
+
+    <string name="main_activity.toggle_toolbar">Toggle toolbar</string>
+    <string name="main_activity.connect_btn_content_description">Start/Stop session with the vehicle</string>
+    <string name="main_activity.configure_view_action_label">Configure current\nview settings</string>
+    <string name="main_activity.configure_pids_action_label">Configure view\nPIDs</string>
+
+    <string name="data">Start/Stop session with the vehicle</string>
+
+    <string-array name="pref.empty_array" />
+    <string name="pref.theme">Theme</string>
+
+    <string-array name="pref.connection_type_array">
+        <item name="connection.bluetooth">bluetooth</item>
+        <item name="connection.wifi">wifi</item>
+        <item name="connection.usb">usb</item>
+        <item name="connection.mock">mock</item>
+    </string-array>
+
+    <string name="pref.settings">Settings</string>
+    <string name="pref.profile.about_title">Vehicle profile description</string>
+    <string name="pref.profile.update_name">Vehicle profile name</string>
+    <string name="pref.profile.category">Vehicle Profiles</string>
+    <string name="pref.profile.backup.category">Backup</string>
+
+    <string name="pref.profile.backup.type">Backup type</string>
+
+    <string name="pref.profile.available_list">Available vehicle profiles</string>
+
+    <string name="pref.profile.restore">Restore Preferences</string>
+    <string name="pref.profile.restore_summary">This process restores your preferences from a backup. Depending on the backup type, your data will be read from
+        <font color='#01804F'>Google Drive</font> or
+        <font color='#1C3D72'>your device</font>.
+    </string>
+
+    <string name="pref.profile.export">Back up your preferences</string>
+    <string name="pref.profile.export_summary">This process backs up your preferences. Depending on the selected backup type, your data will be sent to
+        <font color='#01804F'>Google Drive</font> or stored
+        <font color='#1C3D72'>locally on your device</font>
+    </string>
+
+    <string name="pref.profile.restore_confirmation_dialog">Ready to restore your saved settings? Keep in mind this will replace your current preferences.</string>
+    <string name="pref.profile.reset_confirmation_dialog">Reset all custom settings to default? This action cannot be undone.</string>
+    <string name="pref.profile.reset">Reset to factory settings</string>
+    <string name="pref.profile.reset_summary">This operation resets profile preferences to the factory settings. Note: you will loose all your custom preferences</string>
+    <string name="pref.profile.save_user_settings">Save current vehicle profile preferences</string>
+    <string name="pref.profile.save_user_settings_summary">This operation saves all user selections into the currently selected profile</string>
+    <string name="pref.dash.background_color_1">Start color 1</string>
+    <string name="pref.dash.background_color_2">End color 2</string>
+    <string name="pref.pids.registry.resource_list">Available modules</string>
+    <string name="pref.pids.registry.resource.list_summary">This preference allows to load additional modules, and enable new metrics.</string>
+    <string name="pref.pids.registry.resource.external_storage">Access OBD2 PIDs/Sensor resources files from the external storage</string>
+    <string name="trip_length">Length</string>
+    <string name="trip_start_date">Start date</string>
+    <string name="trip_vehicle_profile">Profile</string>
+    <string name="trip_action">Action</string>
+    <string name="trip_action_delete">Del</string>
+    <string name="dialog_select_all_action">Select\nAll</string>
+    <string name="dialog_deselect_all_action">Deselect\nAll</string>
+
+    <string name="dialog_close_window_action">Close\n </string>
+    <string name="trip_dialog_send_to_cloud_selected">Upload to\ncloud</string>
+    <string name="trip_dialog_delete_all_trips">Delete\nall</string>
+    <string name="trip_delete_dialog_ask_question">Are you sure you want to Delete?</string>
+    <string name="trip_send_to_cloud_dialog_ask_question">Are you sure you want to upload the selected files to the UP/trips directory in your Google Drive?</string>
+
+    <string name="dialog_ask_question_yes">Yes</string>
+    <string name="dialog_ask_question_no">no</string>
+
+    <string name="trip_action_load">Load</string>
+    <string name="status_panel.adapter_connection_type">Adapter</string>
+    <string name="status_panel.vehicle_profile">Profile</string>
+    <string name="status_panel.vehicle_status">Vehicle Status</string>
+
+    <string name="pref.debug_category">Debug</string>
+    <string name="pref.about_category">About</string>
+    <string name="pref.about_title">About</string>
+    <string name="pref.vehicle_settings.category">Vehicle settings</string>
+    <string name="pref.vehicle_settings.fuel_tank_size">Fuel tank size</string>
+    <string name="pref.vehicle_settings.fuel_tank_size_summary">Set here your vehicle tank size. Note: this parameter impacts fuel level calculation</string>
+    <string name="pref.vehicle_settings.category_summary">In this section, you can find settings related to vehicle configuration, including tank size.</string>
+    <string name="pref.about_summary">ObdGraphs is a graphical application designed to collect and display real-time vehicle telemetry data. Built on the ObdMetrics library, it visualizes data generated by the vehicle’s sensors during driving.</string>
+
+    <string name="pref.about_build_time">Build time</string>
+    <string name="pref.about_build_version">Build version</string>
+
+    <string name="pref.alerting.category">Alerts</string>
+    <string name="pref.alerting.category_summary">In this section, you can find settings related to alerting</string>
+
+
+    <string name="pref.adapter_calculation_response_frames_enabled">Calculate expected response frames</string>
+    <string name="pref.adapter_calculation_response_frame_enabled_summary">Automatically informs the adapter of the exact number of expected ISO-TP frames. This bypasses the hardware waiting timeout (P2), maximizing polling speed and data refresh rates.</string>
+    <string name="pref.adapter_graceful_stop_enabled">Enable graceful stop</string>
+    <string name="pref.adapter_graceful_stop_enabled_summary">Enabling this option ensures a graceful shutdown of the session between the ECU and the adapter. Please note that ending the session may take longer when this option is enabled.</string>
+    <string name="pref.pids_display_only_ecu_supported">Display unsupported OBD2 PIDs/Sensors</string>
+    <string name="pref.pids_display_only_ecu_supported_summary">When this option is enabled, you may select PIDs even if the ECU does not support them.</string>
+    <string name="pref.adapter_batch_enabled_summary">Enabling this option sends batch queries to the adapter, allowing up to 6 PIDs/Sensors to be fetched in a single ECU query. This feature enhances performance and is linked to the "Batch Size for Mode 22 and 01" settings.</string>
+    <string name="pref.adapter_error_handling">Errors handling</string>
+    <string name="pref.adapter_error_handling_summary">Under this category, you’ll find options for error handling, including reconnect strategies.</string>
+
+    <string name="pref.pids_display_only_stable_pids">Display experimental OBD2 PIDs/Sensors</string>
+    <string name="pref.pids_display_only_stable_pids_summary">By choosing this option, you can view PIDs featuring experimental formula calculations.</string>
+    <string name="gauge_item_bg_content_description">Gauge background</string>
+    <string name="pref_adapter_settings_summary">In this section, you’ll find all adapter-related preferences. You can configure the connection type (Bluetooth or Wi-Fi), adjust CAN settings, and manage error handling options.</string>
+    <string name="pref_pid_registry_settings_summary">In this section, you can configure OBD2 PIDs/Sensors and choose which ones and how to retrieve from the ECU.</string>
+    <string name="pref_vehicle_metadata_summary">In this section, you can view vehicle metadata fetched from the ECU, including VIN, ECU type, hardware serial number, etc.</string>
+    <string name="pref_vehicle_profile_settings_summary">This section contains preferences related to Vehicle Profiles. You can change the vehicle profile here.</string>
+    <string name="pref_power_settings_summary">Power-related settings are available in this section, allowing you to define the application’s behavior when the charger is plugged in or removed.</string>
+
+    <string name="pids_stable">Stable</string>
+    <string name="pids_alert_lower_threshold">Alert\nlower threshold</string>
+    <string name="pids_alert_upper_threshold">Alert\nupper threshold</string>
+    <string name="pids_formula">Calculation\nformula</string>
+
+    <string name="pids_name">Name</string>
+    <string name="pids_module">Module</string>
+    <string name="pids_selection">Selection</string>
+
+    <string name="pref.usb_event_receiver_activity_label">Grant permissions to access USB device</string>
+    <string name="virtual_screen_1">1</string>
+    <string name="virtual_screen_2">2</string>
+    <string name="virtual_screen_3">3</string>
+    <string name="virtual_screen_4">4</string>
+    <string name="virtual_screen_5">5</string>
+    <string name="virtual_screen_6">6</string>
+    <string name="virtual_screen_7">7</string>
+    <string name="virtual_screen_8">8</string>
+    <string name="dialog_save_action">Save\n </string>
+    <string name="pids_supported">Supported</string>
+    <string name="pref_search_view_title">Search</string>
+
+    <string-array name="pref.numbers_1_20">
+        <item name="0">0</item>
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="4">4</item>
+        <item name="5">5</item>
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="8">8</item>
+        <item name="9">9</item>
+        <item name="10">10</item>
+        <item name="11">11</item>
+        <item name="12">12</item>
+        <item name="13">13</item>
+        <item name="14">14</item>
+        <item name="15">15</item>
+        <item name="16">16</item>
+        <item name="17">17</item>
+        <item name="18">18</item>
+        <item name="19">19</item>
+        <item name="20">20</item>
+    </string-array>
+
+
+    <string-array name="pref.baud_rate_list">
+        <item name="300">300</item>
+        <item name="600">600</item>
+        <item name="1200">1200</item>
+        <item name="2400">2400</item>
+        <item name="4800">4800</item>
+        <item name="9600">9600</item>
+        <item name="14400">14400</item>
+        <item name="19200">19200</item>
+        <item name="28800">28800</item>
+        <item name="38400">38400</item>
+        <item name="56000">56000</item>
+        <item name="57600">57600</item>
+        <item name="115200">115200</item>
+        <item name="128000">128000</item>
+        <item name="256000">256000</item>
+    </string-array>
+
+    <string-array name="pref.numbers_1_25">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="4">4</item>
+        <item name="5">5</item>
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="8">8</item>
+        <item name="9">9</item>
+        <item name="10">10</item>
+        <item name="15">15</item>
+        <item name="20">20</item>
+        <item name="25">25</item>
+    </string-array>
+
+    <string-array name="pref.numbers_1_8">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="4">4</item>
+        <item name="5">5</item>
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="8">8</item>
+    </string-array>
+
+
+    <string-array name="pref.numbers_20000_60000">
+        <item name="20000">20000</item>
+        <item name="25000">25000</item>
+        <item name="30000">30000</item>
+        <item name="35000">35000</item>
+        <item name="40000">40000</item>
+        <item name="45000">45000</item>
+        <item name="50000">50000</item>
+        <item name="60000">60000</item>
+    </string-array>
+
+    <string-array name="pref.numbers_4500_5000">
+        <item name="4500">4500</item>
+        <item name="4600">4600</item>
+        <item name="4700">4700</item>
+        <item name="4800">4800</item>
+        <item name="4900">4900</item>
+        <item name="5000">5000</item>
+        <item name="5100">5100</item>
+        <item name="5200">5200</item>
+        <item name="5300">5300</item>
+        <item name="5400">5400</item>
+        <item name="5500">5500</item>
+    </string-array>
+
+    <string-array name="pref.graph.filter_source">
+        <item name="UP">UP</item>
+        <item name="Gauge">Gauge</item>
+        <item name="AA">AA</item>
+   </string-array>
+
+
+    <string-array name="pref.backup.type">
+        <item name="Local">Local</item>
+        <item name="Cloud">Cloud</item>
+    </string-array>
+
+    <string-array name="pref.numbers_20_74">
+        <item name="20">20</item>
+        <item name="21">21</item>
+        <item name="22">22</item>
+        <item name="24">24</item>
+        <item name="26">26</item>
+        <item name="28">28</item>
+        <item name="29">29</item>
+        <item name="30">30</item>
+        <item name="31">31</item>
+        <item name="32">32</item>
+        <item name="33">33</item>
+        <item name="34">34</item>
+        <item name="36">36</item>
+        <item name="38">38</item>
+        <item name="40">40</item>
+        <item name="42">42</item>
+        <item name="44">44</item>
+        <item name="46">46</item>
+        <item name="48">48</item>
+        <item name="50">50</item>
+        <item name="52">52</item>
+        <item name="54">54</item>
+        <item name="56">56</item>
+        <item name="58">58</item>
+        <item name="60">60</item>
+        <item name="66">66</item>
+        <item name="72">72</item>
+
+    </string-array>
+
+    <integer-array name="pref.colors">
+        <item name="-48060"> -48060</item>
+        <item name="-6697984">-6697984</item>
+        <item name="-17613">-17613</item>
+        <item name="-16737844">-16737844</item>
+        <item name="-1">-1</item>
+    </integer-array>
+
+    <string-array name="pref.numbers_1_2">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="4">4</item>
+    </string-array>
+
+    <string-array name="pref.aa_renderer_type">
+        <item name="UP">UP</item>
+        <item name="GAUGE">GAUGE</item>
+    </string-array>
+
+    <string-array name="pref.aa.gauge.progress_type">
+        <item name="SHORT">SHORT</item>
+        <item name="LONG">LONG</item>
+    </string-array>
+
+
+    <string-array name="pref.numbers_1_10">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="4">4</item>
+        <item name="5">5</item>
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="8">8</item>
+        <item name="9">9</item>
+        <item name="10">10</item>
+    </string-array>
+
+    <string-array name="pref.numbers_500_6000">
+        <item name="0">0</item>
+        <item name="500">500</item>
+        <item name="1000">1000</item>
+        <item name="2000">2000</item>
+        <item name="3000">3000</item>
+        <item name="4000">4000</item>
+        <item name="5000">5000</item>
+        <item name="6000">6000</item>
+    </string-array>
+
+    <string-array name="pref.init_protocol">
+        <item name="AUTO">AUTO</item>
+        <item name="CAN_11" tools:ignore="Typos">CAN_11</item>
+        <item name="CAN_29">CAN_29</item>
+    </string-array>
+
+    <!-- Extracted from layouts -->
+    <string name="dtc.freeze_frame_data">UDS Freeze Frame Data</string>
+    <string name="dtc.action_google_issue">Google Issue</string>
+    <string name="dtc.action_copy">Copy</string>
+    <string name="dtc.action_refresh">Refresh</string>
+    <string name="dtc.action_clear_codes">Clear Codes</string>
+    <string name="dtc.action_share">Share</string>
+    <string name="dialog.screen_lock.cancel">Cancel</string>
+    <string name="gps.title">GPS DIAGNOSTICS</string>
+    <string name="gps.status_label">Status</string>
+    <string name="gps.waiting_for_fix">Waiting for fix&#8230;</string>
+    <string name="gps.accuracy_label">Accuracy (Error Radius)</string>
+    <string name="gps.latitude">Latitude</string>
+    <string name="gps.longitude">Longitude</string>
+    <string name="gps.satellites_label">Satellites (Visible/Used)</string>
+    <string name="gps.debug_log">Debug Log</string>
+    <string name="gps.initializing">Initializing&#8230;</string>
+
+    <string-array name="pref.language_names">
+        <item>System default</item>
+        <item>English</item>
+        <item>Polski</item>
+    </string-array>
+
+    <string-array name="pref.language_codes">
+        <item></item>
+        <item>en</item>
+        <item>pl</item>
+    </string-array>
+</resources>

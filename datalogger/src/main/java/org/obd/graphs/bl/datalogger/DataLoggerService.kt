@@ -1,0 +1,251 @@
+/*
+ * Copyright 2019-2026, Tomasz Żebrowski
+ *
+ * <p>Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ *
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.obd.graphs.bl.datalogger
+
+import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
+import android.util.Log
+import org.obd.graphs.NOTIFICATION_CHANNEL_ID
+import org.obd.graphs.NOTIFICATION_ID
+import org.obd.graphs.Notifications
+import org.obd.graphs.Permissions
+import org.obd.graphs.REQUEST_LOCATION_PERMISSIONS
+import org.obd.graphs.REQUEST_NOTIFICATION_PERMISSIONS
+import org.obd.graphs.SCREEN_LOCK_PROGRESS_EVENT
+import org.obd.graphs.ScreenLock
+import org.obd.graphs.bl.query.Query
+import org.obd.graphs.commons.R
+import org.obd.graphs.sendBroadcastEvent
+
+private const val ACTION_DTC_CLEANUP = "org.obd.graphs.logger.DTC.cleanup"
+private const val ACTION_DTC_READ = "org.obd.graphs.logger.DTC.read"
+private const val ACTION_START = "org.obd.graphs.logger.START"
+private const val ACTION_STOP = "org.obd.graphs.logger.STOP"
+private const val UPDATE_QUERY = "org.obd.graphs.logger.UPDATE_QUERY"
+private const val QUERY = "org.obd.graphs.logger.QUERY"
+private const val EXECUTE_ROUTINE = "org.obd.graphs.logger.EXECUTE_ROUTINE"
+
+class DataLoggerService : Service() {
+    private val binder = LocalBinder()
+
+    internal inner class LocalBinder : Binder() {
+        fun getService(): DataLoggerService = this@DataLoggerService
+    }
+
+    override fun onBind(intent: Intent?): IBinder = binder
+
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
+        Log.i(LOG_TAG, "Starting DataLoggerService in the Foreground Mode")
+
+        startForegroundServiceSafe()
+
+        // Fail-fast if permissions are missing
+        if (!Permissions.hasNotificationPermissions(this)) {
+            Log.e(LOG_TAG, "CRITICAL: Missing required permissions. Service cannot start.")
+            serviceStop()
+            sendBroadcastEvent(REQUEST_NOTIFICATION_PERMISSIONS)
+            return START_NOT_STICKY
+        }
+
+        val action = intent?.action
+        // Because of the "Loopback" pattern, this is executed on the Main Thread,
+        // effectively serializing these commands.
+        when (action) {
+            UPDATE_QUERY -> {
+                val query = intent.extras?.get(QUERY) as? Query
+                query?.let { DataLoggerRepository.workflowOrchestrator.updateQuery(query = it) }
+            }
+
+            ACTION_START -> {
+                val query = intent.extras?.get(QUERY) as? Query
+                query?.let { DataLoggerRepository.workflowOrchestrator.start(it) }
+            }
+
+            ACTION_DTC_CLEANUP -> {
+                DataLoggerRepository.workflowOrchestrator.scheduleDTCCleanup()
+            }
+
+            ACTION_DTC_READ -> {
+                DataLoggerRepository.workflowOrchestrator.scheduleDTCRead()
+            }
+
+            EXECUTE_ROUTINE -> {
+                val query = intent.extras?.get(QUERY) as? Query
+                query?.let { DataLoggerRepository.workflowOrchestrator.executeRoutine(it) }
+            }
+
+            ACTION_STOP -> {
+                DataLoggerRepository.workflowOrchestrator.stop()
+                serviceStop()
+            }
+        }
+
+        return START_STICKY
+    }
+
+    fun updateQuery(query: Query) {
+        if (DataLoggerRepository.isRunning()) {
+            if (DataLoggerRepository.workflowOrchestrator.isSameQuery(query)) {
+                if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
+                    Log.d(
+                        LOG_TAG,
+                        "Do not update the query for strategy=${query.getStrategy()}. It is the same query that already running"
+                    )
+                }
+            } else {
+                Log.i(
+                    LOG_TAG,
+                    "Updating query for strategy=${query.getStrategy()}. PIDs=${query.getIDs()}"
+                )
+                enqueueWork(UPDATE_QUERY) { it.putExtra(QUERY, query) }
+            }
+        } else {
+            Log.w(LOG_TAG, "No workflow is currently running. Query won't be updated.")
+        }
+    }
+
+    fun executeRoutine(query: Query) {
+        enqueueWork(EXECUTE_ROUTINE) { it.putExtra(QUERY, query) }
+    }
+
+    fun start(query: Query) {
+        attemptScreenLock()
+        enqueueWork(ACTION_START) { it.putExtra(QUERY, query) }
+    }
+
+    fun scheduleDTCCleanup() {
+        enqueueWork(ACTION_DTC_CLEANUP)
+    }
+
+    fun scheduleDTCRead() {
+        enqueueWork(ACTION_DTC_READ)
+    }
+
+    fun stop() {
+        enqueueWork(ACTION_STOP)
+    }
+
+    private fun startForegroundServiceSafe() {
+        val notification = createNotification()
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                var serviceTypes = ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+
+                // Only add LOCATION type if we actually have runtime permission
+                if (Permissions.hasLocationPermissions(this)) {
+                    serviceTypes = serviceTypes or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+                } else {
+                    Log.w(
+                        LOG_TAG,
+                        "Location permission missing. Starting Service without GPS capabilities."
+                    )
+                }
+
+                startForeground(NOTIFICATION_ID, notification, serviceTypes)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (e: SecurityException) {
+            Log.e(LOG_TAG, "Failed to start FGS with requested types. Retrying with basic type.", e)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        notification,
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+                    )
+                } catch (e2: Exception) {
+                    Log.e(LOG_TAG, "CRITICAL: Failed to start FGS even with fallback.", e2)
+                    sendBroadcastEvent(REQUEST_LOCATION_PERMISSIONS)
+                    serviceStop()
+                }
+            }
+        }
+    }
+
+    private fun enqueueWork(
+        intentAction: String,
+        func: (p: Intent) -> Unit = {}
+    ) {
+        try {
+            val intent =
+                Intent(this, DataLoggerService::class.java).apply {
+                    action = intentAction
+                    putExtra("init", 1)
+                }
+            func(intent)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+        } catch (e: IllegalStateException) {
+            Log.e(LOG_TAG, "Failed to enqueue the work", e)
+        }
+    }
+
+    private fun createNotification(): Notification =
+        Notifications.buildForegroundServiceNotification(
+            context = this,
+            channelId = NOTIFICATION_CHANNEL_ID,
+            channelName = "OBD Logger Service",
+            channelDescription = "Displays the status of the OBD connection",
+            title = "Vehicle Telemetry Service",
+            text = "Logging OBD data in background...",
+            pendingIntent = packageManager.getLaunchIntentForPackage(packageName)?.let {
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    it,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
+        )
+
+    @SuppressLint("ObsoleteSdkInt")
+    private fun serviceStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            @Suppress("DEPRECATION")
+            stopForeground(true)
+        }
+        stopSelf()
+    }
+
+    private fun attemptScreenLock() =
+        sendBroadcastEvent(
+            SCREEN_LOCK_PROGRESS_EVENT,
+            ScreenLock(
+                message = R.string.pref_dialog_screen_lock_logger_connect_message,
+                showCancel = true,
+                context = "datalogger.connect"
+            )
+        )
+}

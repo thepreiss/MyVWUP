@@ -1,0 +1,18 @@
+<configuration>
+    <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+        <tagEncoder>
+            <pattern>%logger{12}</pattern>
+        </tagEncoder>
+        <encoder>
+            <pattern>%msg</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.obd.metrics.transport.DefaultConnector" additivity="false" level="info">
+        <appender-ref ref="logcat" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="logcat" />
+    </root>
+</configuration>

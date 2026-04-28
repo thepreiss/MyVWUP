@@ -1,0 +1,56 @@
+<resources>
+    <string name="dialog.screen.lock.trip.load.message">Trip is now loading. This may take a while.....  Please close the window after all.</string>
+    <string name="pref.dialog.screen.lock.logger_connect.message">Please wait. Adapter connection may take a while....</string>
+
+    <string name="dialog.screen.lock.trip.save.message">Trip is now saving. This may take a while....</string>
+    <string name="main_activity.toast.connection.error">Error occurred during connection. Please try to connect again. If this does not help please check your connection settings.</string>
+    <string name="main_activity.toast.connection.stopped">Connection with the device has been stopped.</string>
+    <string name="main_activity.toast.connection.established">Connection to the device has been established.\n Start collecting data from ECU.</string>
+    <string name="main_activity.toast.connection.connecting">Connecting to the device.</string>
+    <string name="main_activity.toast.connection.connect_error"> Error occurred during connection.\nPlease check your network settings.</string>
+    <string name="main_activity.toast.connection.no_network">Network connection might be turned off.\n Please check your settings.</string>
+    <string name="main_activity.toast.adapter_is_not_selected">Adapter is not selected. Please select Adapter and try again.</string>
+    <string name="main_activity.toast.connection.wifi.incorrect_ssid">Please update WIFI settings.</string>
+    <string name="main_activity.toast.connection.wifi.not_connected">Please connect to WIFI network.</string>
+    <string name="main_activity.toast.backup.failed">Backup operation failed. Please repeat the operation</string>
+    <string name="main_activity.toast.backup.successful">Backup operation completed successfully.</string>
+    <string name="main_activity.toast.backup.restore.no_files">Restore operation did not completed. There is no backup files available.</string>
+    <string name="main_activity.toast.backup.restore.failed">Restore operation failed. Please repeat the operation.</string>
+    <string name="main_activity.toast.backup.restore.successful">Restore operation completed successfully.</string>
+
+    <string name="main_activity.toast.trips.upload.failed">Trips upload operation failed. </string>
+    <string name="main_activity.toast.trips.upload.successful">Trips upload operation completed successfully.</string>
+    <string name="main_activity.toast.trips.upload.no_files_selected">There is no files selected. Nothing was uploaded.</string>
+    <string name="main_activity.toast.google.signin.failed_restart">Google sign-in isn"t working at the moment. Please restart application.</string>
+    <string name="main_activity.toast.google.signin.failed">Google sign-in isn"t working at the moment. It might be a temporary glitch. Please give it another try shortly.</string>
+
+    <string name="permissions.missing.bt_msg">To communicate with your vehicle, please allow Bluetooth access.</string>
+    <string name="permissions.missing.location_msg">To access WIFI network, record your trip route and speed, please allow Location access.</string>
+    <string name="permission.onboarding_title">Setup Required</string>
+    <string name="permission_onboarding_message"><![CDATA[
+To provide full functionality, please allow the following in the next steps:<br/><br/>
+• <b>Battery Optimization</b>: To ensure data logging isn\'t interrupted.<br/>
+• <b>Location</b>: To track your trip via GPS.<br/>
+• <b>Bluetooth</b>: To connect to your OBD adapter.<br/>
+• <b>Notifications</b>: To keep the logger running in the background.
+]]></string>
+    <string name="permission.onboarding_btn_positive">Begin Setup</string>
+    <string name="permission.onboarding_btn_negative">Later</string>
+
+    <string name="language_selection_title">Select Language</string>
+    <string name="pref.language.title">Language</string>
+    <string name="pref.language.summary">Choose the application language</string>
+
+    <string-array name="language_names">
+        <item>System default</item>
+        <item>English</item>
+        <item>Polski</item>
+    </string-array>
+
+    <string-array name="language_codes">
+        <item></item>
+        <item>en</item>
+        <item>pl</item>
+    </string-array>
+
+</resources>

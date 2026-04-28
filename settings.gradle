@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+rootProject.name = "ObdGraphs"
+include ':common'
+include ':profile'
+include ':datalogger'
+include ':dragracing'
+include ':screen_renderer'
+include ':integrations'
+include ':app'
+include ':automotive'
+include ':ext'
+include ':screen_behavior'
