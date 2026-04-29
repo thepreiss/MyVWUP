@@ -31,6 +31,7 @@ import org.obd.graphs.renderer.api.DynamicSelectorMode
 import org.obd.graphs.renderer.api.GaugeProgressBarType
 import org.obd.graphs.renderer.api.GaugeScreenSettings
 import org.obd.graphs.renderer.api.GiuliaScreenSettings
+import org.obd.graphs.renderer.api.GtiScreenSettings
 import org.obd.graphs.renderer.api.Identity
 import org.obd.graphs.renderer.api.PerformanceScreenSettings
 import org.obd.graphs.renderer.api.RoutinesScreenSettings
@@ -79,6 +80,16 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
 
     private var itemsSortOrder: Map<Long, Int>? = emptyMap()
     private val dragRacingScreenSettings = DragRacingScreenSettings()
+    
+    private val gtiCyclePids = listOf(1002L, 0L, 52L, 12L, 5L, 13L, 35L, 66L, 7003L, 4L, 17L, 15L, 82L, 60L) 
+    // Turbo (Post IC), RPM, Coolant, Speed, Intake, Battery, Oil Temp
+
+    private val gtiScreenSettings: GtiScreenSettings = object: GtiScreenSettings() {
+        override fun setVirtualScreen(id: Int) {
+            // Not used for individual rotation
+        }
+        override fun getVirtualScreen(): Int = 0
+    }
     private val colorTheme = ColorTheme()
 
     private val gaugeScreenSettings = object: GaugeScreenSettings(){
@@ -117,10 +128,37 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
 
     init {
         copyGiuliaSettings()
+        initGaugesDefaultProfiles()
     }
 
     override fun handleProfileChanged() {
         copyGiuliaSettings()
+        initGaugesDefaultProfiles()
+    }
+    
+    private fun initGaugesDefaultProfiles() {
+        // Migration/Reset to ensure we use correct IDs and data types
+        if (Prefs.getInt("pref.aa.pids.init.version", 0) < 8) {
+            val p1 = listOf(12L, 13L, 11L, 4L, 17L, 15L) // Performance: RPM, Speed, Intake, Load, Throttle, Intake Air
+            val p2 = listOf(5L, 60L, 66L, 82L, 51L, 35L) // Health: Coolant, Catalyst, Battery, Ethanol, Baro, Fuel Pressure
+
+            Prefs.updateLongSet("pref.aa.gauge.pids.profile_1", p1)
+            Prefs.updateLongSet("pref.aa.gauge.pids.profile_2", p2)
+            Prefs.updateLongSet("pref.aa.pids.profile_1", p1)
+            Prefs.updateLongSet("pref.aa.pids.profile_2", p2)
+            
+            Prefs.updateLongSet("pref.aa.trip_info.pids.selected", listOf(13L, 12L, 5L, 11L, 47L, 66L))
+            Prefs.updateLongSet("pref.aa.performance.pids.selected", p1 + p2)
+            
+            // Map them to top and bottom sections for Performance Screen
+            val topPerfPids = listOf(13L, 7003L, 60L) // Speed, Oil Temp, Catalyst
+            val bottomPerfPids = listOf(12L, 11L, 4L) // RPM, Turbo (Intake), Load
+            
+            Prefs.updateLongSet("pref.query.performance.top", topPerfPids)
+            Prefs.updateLongSet("pref.query.performance.bottom", bottomPerfPids)
+            
+            Prefs.updateInt("pref.aa.pids.init.version", 8)
+        }
     }
 
     override fun getDragRacingScreenSettings(): DragRacingScreenSettings = dragRacingScreenSettings.apply {
@@ -193,6 +231,26 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
 
     override fun getGiuliaScreenSettings(): GiuliaScreenSettings = giuliaScreenSettings.apply {
         updateSelectedPIDs(Prefs.getStringSet(dataPrefs.selectedPIDsKey).map { s -> s.toLong() }.toSet())
+    }
+
+    override fun getGtiScreenSettings(): GtiScreenSettings = gtiScreenSettings.apply {
+        val leftIdx = Prefs.getInt("pref.aa.gti.pids.left.idx", 0)
+        val centerIdx = Prefs.getInt("pref.aa.gti.pids.center.idx", 1) // Default to Turbo
+        val rightIdx = Prefs.getInt("pref.aa.gti.pids.right.idx", 3)  // Default to Coolant
+        
+        leftPid = gtiCyclePids.getOrElse(leftIdx % gtiCyclePids.size) { 0L }
+        centerPid = gtiCyclePids.getOrElse(centerIdx % gtiCyclePids.size) { 1002L }
+        rightPid = gtiCyclePids.getOrElse(rightIdx % gtiCyclePids.size) { 5L }
+    }
+
+    fun rotateGtiGauge(slot: Int) {
+        val key = when(slot) {
+            0 -> "pref.aa.gti.pids.left.idx"
+            1 -> "pref.aa.gti.pids.center.idx"
+            else -> "pref.aa.gti.pids.right.idx"
+        }
+        val currentIdx = Prefs.getInt(key, if (slot == 1) 1 else if (slot == 2) 3 else 0)
+        Prefs.updateInt(key, (currentIdx + 1) % gtiCyclePids.size)
     }
 
     override fun getMaxItems(): Int  =  Prefs.getS("pref.aa.virtual_screens.screen.max_items","6").toInt()

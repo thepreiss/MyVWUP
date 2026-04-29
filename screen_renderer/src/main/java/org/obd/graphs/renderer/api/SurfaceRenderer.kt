@@ -25,6 +25,7 @@ import org.obd.graphs.renderer.gauge.GaugeSurfaceRenderer
 import org.obd.graphs.renderer.giulia.GiuliaSurfaceRenderer
 import org.obd.graphs.renderer.performance.PerformanceSurfaceRenderer
 import org.obd.graphs.renderer.trip.TripInfoSurfaceRenderer
+import org.obd.graphs.renderer.gti.GtiSurfaceRenderer
 
 /**
  * Defines the contract for rendering telemetry data and graphical UI components onto an Android [Canvas].
@@ -64,6 +65,13 @@ interface SurfaceRenderer {
      */
     fun invalidate()
 
+    /**
+     * Handles a click event on the rendering surface.
+     * @param x The x-coordinate of the click in pixels.
+     * @param y The y-coordinate of the click in pixels.
+     */
+    fun onSurfaceClick(x: Float, y: Float) {}
+
     companion object {
         /**
          * Factory method to instantiate a concrete [SurfaceRenderer] based on the requested type.
@@ -88,6 +96,7 @@ interface SurfaceRenderer {
                 SurfaceRendererType.DRAG_RACING -> DragRacingSurfaceRenderer(context, settings, metricsCollector, fps)
                 SurfaceRendererType.TRIP_INFO -> TripInfoSurfaceRenderer(context, settings, metricsCollector, fps)
                 SurfaceRendererType.PERFORMANCE -> PerformanceSurfaceRenderer(context, settings, metricsCollector, fps)
+                SurfaceRendererType.GTI -> GtiSurfaceRenderer(context, settings, metricsCollector, fps)
             }
     }
 }

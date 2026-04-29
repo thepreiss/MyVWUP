@@ -793,11 +793,18 @@
         <item>System default</item>
         <item>English</item>
         <item>Polski</item>
+        <item>Português (Brasil)</item>
     </string-array>
 
     <string-array name="pref.language_codes">
         <item></item>
         <item>en</item>
         <item>pl</item>
+        <item>pt</item>
     </string-array>
+    <string name="pref.aa.gti.category">GTI View Configuration</string>
+    <string name="pref.aa.gti.left_pid">Left Gauge</string>
+    <string name="pref.aa.gti.center_pid">Center Gauge</string>
+    <string name="pref.aa.gti.profiles">GTI Dashboard Profiles</string>
+    <string name="pref.aa.gti.profiles_summary">Configure gauges for each of the 4 GTI dashboard profiles</string>
 </resources>

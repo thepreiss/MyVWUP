@@ -163,10 +163,7 @@ internal class BrakeBoostingDrawer(context: Context, settings: ScreenSettings) :
                 top = top,
                 width = width,
                 metric = metric,
-                labelCenterYPadding = labelCenterYPadding,
-                fontSize = settings.getDragRacingScreenSettings().fontSize,
-                scaleEnabled = false,
-                statsEnabled = false
+                label = metric.source.command.pid.description
             )
         }
     }

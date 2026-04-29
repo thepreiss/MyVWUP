@@ -174,10 +174,7 @@ internal class PerformanceDrawer(context: Context, settings: ScreenSettings) :
                 top = top,
                 width = width,
                 metric = metric,
-                labelCenterYPadding = labelCenterYPadding,
-                fontSize = settings.getPerformanceScreenSettings().fontSize,
-                scaleEnabled = false,
-                statsEnabled = metric.source.isNumber()
+                label = metric.source.command.pid.description
             )
             true
         }

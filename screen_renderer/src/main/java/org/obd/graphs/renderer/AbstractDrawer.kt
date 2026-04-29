@@ -43,14 +43,14 @@ import kotlin.math.max
 private const val STATUS_KEY_FONT_SIZE = 12f
 private const val STATUS_VALUE_FONT_SIZE = 18f
 
-private const val CURRENT_MIN = 22f
-private const val CURRENT_MAX = 72f
-private const val NEW_MAX = 1.6f
-private const val NEW_MIN = 0.6f
+const val CURRENT_MIN = 22f
+const val CURRENT_MAX = 72f
+const val NEW_MAX = 1.6f
+const val NEW_MIN = 0.6f
 const val MARGIN_END = 30
 
 @Suppress("NOTHING_TO_INLINE")
-internal abstract class AbstractDrawer(
+abstract class AbstractDrawer(
     protected val context: Context,
     protected val settings: ScreenSettings
 ) {

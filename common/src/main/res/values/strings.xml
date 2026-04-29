@@ -45,12 +45,14 @@ To provide full functionality, please allow the following in the next steps:<br/
         <item>System default</item>
         <item>English</item>
         <item>Polski</item>
+        <item>Português (Brasil)</item>
     </string-array>
 
     <string-array name="language_codes">
         <item></item>
         <item>en</item>
         <item>pl</item>
+        <item>pt</item>
     </string-array>
 
 </resources>

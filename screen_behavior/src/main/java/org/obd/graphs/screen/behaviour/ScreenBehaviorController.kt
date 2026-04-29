@@ -61,6 +61,9 @@ class ScreenBehaviorController(
 
                 SurfaceRendererType.TRIP_INFO ->
                     TripInfoScreenBehavior(context, metricsCollector, settings, fps)
+
+                SurfaceRendererType.GTI ->
+                    GtiScreenBehavior(context, metricsCollector, settings, fps)
             }
         }
     }

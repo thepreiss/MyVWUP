@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- Red Circle Background -->
+    <path
+        android:fillColor="#E30613"
+        android:pathData="M100,100m-90,0a90,90 0,1 1,180 0a90,90 0,1 1,-180 0" />
+    
+    <!-- U -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,70v40c0,10 10,20 20,20s20,-10 20,-20v-40h-10v40c0,5 -5,10 -10,10s-10,-5 -10,-10v-40z" />
+    
+    <!-- P -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M105,70v60h10v-25h15c10,0 15,-5 15,-15s-5,-20 -15,-20zM115,80h15c5,0 8,3 8,10s-3,10 -8,10h-15z" />
+</vector>

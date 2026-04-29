@@ -1,0 +1,22 @@
+<resources>
+    <string name="dialog.screen.lock.saving.trip.message">A viagem está sendo salva. Isso pode levar um tempo....</string>
+    <string name="main_activity.toast.connection.error">Ocorreu um erro durante a conexão. Tente conectar novamente ou verifique as configurações.</string>
+    <string name="main_activity.toast.connection.stopped">A conexão com o dispositivo foi interrompida.</string>
+    <string name="main_activity.toast.connection.established">Conexão estabelecida.\nIniciando a coleta de dados da ECU.</string>
+    <string name="main_activity.toast.connection.connecting">Conectando ao dispositivo...</string>
+    <string name="main_activity.toast.connection.connect_error">Erro de conexão.\nVerifique suas configurações de rede.</string>
+    <string name="main_activity.toast.connection.no_network">A conexão de rede pode estar desligada.\nVerifique suas configurações.</string>
+    <string name="main_activity.toast.adapter_is_not_selected">O adaptador não foi selecionado. Escolha um adaptador e tente novamente.</string>
+    <string name="main_activity.toast.connection.wifi.incorrect_ssid">Atualize as configurações de Wi-Fi.</string>
+    <string name="main_activity.toast.connection.wifi.not_connected">Conecte-se à rede Wi-Fi.</string>
+
+    <string name="status_bar.status">status: </string>
+    <string name="status_bar.profile">perfil: </string>
+    <string name="status_bar.fps">fps: </string>
+    <string name="status_bar.connected">conectado</string>
+    <string name="status_bar.disconnected">desconectado</string>
+    <string name="status_bar.connecting">conectando...</string>
+    <string name="status_bar.stopping">parando...</string>
+    <string name="status_bar.ambient_temp">temp. ambiente: </string>
+    <string name="status_bar.atm_pressure">pressão atm: </string>
+</resources>

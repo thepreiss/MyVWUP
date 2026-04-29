@@ -31,7 +31,9 @@ class ViewPreferencesSerializer(private val prefName: String) {
 
     private var mapper = ObjectMapper().apply {
         registerModule(KotlinModule())
+        @Suppress("DEPRECATION")
         configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+        @Suppress("DEPRECATION")
         configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true)
     }
 

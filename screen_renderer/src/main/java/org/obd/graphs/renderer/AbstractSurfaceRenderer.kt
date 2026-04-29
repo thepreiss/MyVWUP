@@ -26,7 +26,7 @@ import kotlin.math.max
 
 const val MARGIN_TOP = 8
 
-internal abstract class AbstractSurfaceRenderer(protected val context: Context) : SurfaceRenderer {
+abstract class AbstractSurfaceRenderer(protected val context: Context) : SurfaceRenderer {
 
     protected var scrollOffset: Float = 0f
     protected val scrollBarWidth = 6f

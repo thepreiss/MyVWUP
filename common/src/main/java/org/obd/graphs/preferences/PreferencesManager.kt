@@ -120,7 +120,7 @@ abstract class AbstractPreferencesManager<T> : PreferencesManager<T> {
             null
         }
 
-    private inline fun normalizeNewValue(
+    private fun normalizeNewValue(
         value: Any?,
         type: KClass<*>,
         key: String?

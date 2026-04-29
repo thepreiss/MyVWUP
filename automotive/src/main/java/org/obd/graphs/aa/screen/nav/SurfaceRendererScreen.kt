@@ -89,7 +89,8 @@ internal class SurfaceRendererScreen(
             SurfaceRendererType.GIULIA to settings,
             SurfaceRendererType.TRIP_INFO to settings,
             SurfaceRendererType.DRAG_RACING to settings,
-            SurfaceRendererType.PERFORMANCE to settings
+            SurfaceRendererType.PERFORMANCE to settings,
+            SurfaceRendererType.GTI to settings
         ),
         fps
     )
@@ -212,6 +213,11 @@ internal class SurfaceRendererScreen(
                 stringProvider.getString(R.string.available_features_drag_race_screen_title)
             ),
             FeatureDescription(
+                SurfaceRendererType.GTI,
+                R.drawable.action_gti,
+                "Monitor GTI"
+            ),
+            FeatureDescription(
                 SurfaceRendererType.GAUGE,
                 R.drawable.action_gauge,
                 stringProvider.getString(R.string.available_features_gauge_screen_title)
@@ -257,13 +263,17 @@ internal class SurfaceRendererScreen(
     override fun onGetTemplate(): Template {
         var template = NavigationTemplate.Builder()
 
-        if (screenId == SurfaceRendererType.GIULIA || screenId == SurfaceRendererType.GAUGE) {
+        if (screenId == SurfaceRendererType.GTI) {
+            getGtiActionStrip()?.let {
+                template = template.setMapActionStrip(it)
+            }
+        } else {
             getVerticalActionStrip()?.let {
                 template = template.setMapActionStrip(it)
             }
         }
 
-        return template.setActionStrip(getHorizontalActionStrip()).build()
+        return template.setActionStrip(getHorizontalActionStrip(exitEnabled = true)).build()
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -299,44 +309,55 @@ internal class SurfaceRendererScreen(
         screenBehaviorController.recycle()
     }
 
-    private fun getVerticalActionStrip(): ActionStrip? {
-        var added = false
+    private fun getGtiActionStrip(): ActionStrip? {
         var builder = ActionStrip.Builder()
 
+        mapOf(
+            1 to R.drawable.action_virtual_screen_1,
+            2 to R.drawable.action_virtual_screen_2,
+            3 to R.drawable.action_virtual_screen_3
+        ).forEach { (slot, icon) ->
+            builder = builder.addAction(
+                createAction(carContext, icon, mapColor(settings.getColorTheme().actionsBtnVirtualScreensColor)) {
+                    settings.rotateGtiGauge(slot - 1)
+                    dataLoggerUpdateQuery()
+                    renderFrame()
+                }
+            )
+        }
+
+        return builder.build()
+    }
+
+    private fun getVerticalActionStrip(): ActionStrip? {
+        var builder = ActionStrip.Builder()
+
+        val behavior = screenBehaviorController.getScreenBehavior(screenId)
         mapOf(
             1 to R.drawable.action_virtual_screen_1,
             2 to R.drawable.action_virtual_screen_2,
             3 to R.drawable.action_virtual_screen_3,
             4 to R.drawable.action_virtual_screen_4
         ).forEach { (k, v) ->
-            if (settings.isVirtualScreenEnabled(k)) {
-                added = true
-                val behavior = screenBehaviorController.getScreenBehavior(screenId)
+            val color =
+                if (behavior?.getCurrentVirtualScreen() == k) {
+                    CarColor.GREEN
+                } else {
+                    mapColor(settings.getColorTheme().actionsBtnVirtualScreensColor)
+                }
 
-                val color =
-                    if (behavior?.getCurrentVirtualScreen() == k) {
-                        CarColor.GREEN
-                    } else {
-                        mapColor(settings.getColorTheme().actionsBtnVirtualScreensColor)
+            builder =
+                builder.addAction(
+                    createAction(carContext, v, color) {
+                        parent.invalidate()
+                        behavior?.setCurrentVirtualScreen(id = k)
+                        dataLoggerUpdateQuery()
+                        renderFrame()
                     }
-
-                builder =
-                    builder.addAction(
-                        createAction(carContext, v, color) {
-                            parent.invalidate()
-                            behavior?.setCurrentVirtualScreen(id = k)
-                            dataLoggerUpdateQuery()
-                            renderFrame()
-                        }
-                    )
-            }
+                )
         }
 
-        return if (added) {
-            builder.build()
-        } else {
-            null
-        }
+        return builder.build()
     }
 
     private fun getSurfaceRendererType(): SurfaceRendererType =

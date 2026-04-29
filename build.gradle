@@ -2,7 +2,7 @@
 buildscript {
     ext {
         gradle_version = '8.8.0'
-        kotlin_version = '1.9.0'
+        kotlin_version = '1.9.22'
         gms_version = '4.3.15'
     }
 
@@ -28,6 +28,16 @@ plugins {
 project.ext {
     compileSdkVersion = 35
     minSdkVersion = 26
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 allprojects {

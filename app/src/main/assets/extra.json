@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1001,
+    "name": "Pressão de Combustível",
+    "mode": "01",
+    "pid": "3A",
+    "units": "psi",
+    "formula": "((A*256)+B)*10 * 0.145038",
+    "min": 0,
+    "max": 3000
+  },
+  {
+    "id": 1002,
+    "name": "Pressão de Turbo",
+    "mode": "01",
+    "pid": "0B",
+    "units": "bar",
+    "formula": "(A - p0133) / 100.0",
+    "min": -1,
+    "max": 3
+  },
+  {
+    "id": 82,
+    "name": "Porcentagem de Etanol",
+    "mode": "01",
+    "pid": "52",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 60,
+    "name": "Temperatura do Catalisador",
+    "mode": "01",
+    "pid": "3C",
+    "units": "C",
+    "formula": "((A*256)+B)/10 - 40",
+    "min": -40,
+    "max": 1000
+  },
+  {
+    "id": 4,
+    "name": "Carga do Motor",
+    "mode": "01",
+    "pid": "04",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 6,
+    "name": "Correção Curto Prazo (STFT)",
+    "mode": "01",
+    "pid": "06",
+    "units": "%",
+    "formula": "(A - 128) * 100 / 128",
+    "min": -100,
+    "max": 100
+  },
+  {
+    "id": 7,
+    "name": "Correção Longo Prazo (LTFT)",
+    "mode": "01",
+    "pid": "07",
+    "units": "%",
+    "formula": "(A - 128) * 100 / 128",
+    "min": -100,
+    "max": 100
+  },
+  {
+    "id": 47,
+    "name": "Nível de Combustível",
+    "mode": "01",
+    "pid": "2F",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 51,
+    "name": "Pressão Atmosférica",
+    "mode": "01",
+    "pid": "33",
+    "units": "kPa",
+    "formula": "A",
+    "min": 0,
+    "max": 255
+  },
+  {
+    "id": 66,
+    "name": "Voltagem do Módulo",
+    "mode": "01",
+    "pid": "42",
+    "units": "V",
+    "formula": "((A*256)+B) / 1000",
+    "min": 0,
+    "max": 18
+  },
+  {
+    "id": 70,
+    "name": "Temperatura Ambiente",
+    "mode": "01",
+    "pid": "46",
+    "units": "C",
+    "formula": "A - 40",
+    "min": -40,
+    "max": 100
+  },
+  {
+    "id": 73,
+    "name": "Posição do Pedal D",
+    "mode": "01",
+    "pid": "49",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 74,
+    "name": "Posição do Pedal E",
+    "mode": "01",
+    "pid": "4A",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 76,
+    "name": "Atuador da Borboleta",
+    "mode": "01",
+    "pid": "4C",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 35,
+    "name": "Pressão de Combustível (Rail)",
+    "mode": "01",
+    "pid": "23",
+    "units": "bar",
+    "formula": "((A*256)+B) * 10 / 100",
+    "min": 0,
+    "max": 200
+  }
+]

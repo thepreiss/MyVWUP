@@ -37,7 +37,7 @@ class BroadcastEventCheckBoxPreference(
         super.setChecked(checked)
 
         if (changed) {
-            if (broadcastEvent != null && broadcastEvent.isNotEmpty()) {
+            if (broadcastEvent.isNotEmpty()) {
                 Log.d("BroadcastEventCheckBoxPreference", "Visibility changed to: $checked for $broadcastEvent")
                 sendBroadcastEvent(broadcastEvent)
             }

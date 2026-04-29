@@ -88,9 +88,15 @@ internal class PowerBroadcastReceiver : BroadcastReceiver() {
         activityClass: Class<*>
     ): Boolean {
         val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val taskInfo = activityManager.getRunningTasks(1)
-        Log.d(LOG_TAG, "Current top activity ${taskInfo[0].topActivity!!.className}")
-        val componentInfo = taskInfo[0].topActivity
-        return activityClass.canonicalName.equals(componentInfo!!.className, ignoreCase = true)
+        val appProcesses = activityManager.runningAppProcesses
+        if (appProcesses != null) {
+            val packageName = context.packageName
+            for (appProcess in appProcesses) {
+                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName == packageName) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 }

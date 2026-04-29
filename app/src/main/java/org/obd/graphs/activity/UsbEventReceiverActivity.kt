@@ -29,7 +29,12 @@ class UsbEventReceiverActivity : Activity() {
         if (intent != null) {
             when (intent.action) {
                 UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
-                    val usbDevice: Parcelable? = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                    val usbDevice = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, android.hardware.usb.UsbDevice::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<android.hardware.usb.UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    }
                     val broadcastIntent = Intent(USB_DEVICE_ATTACHED_EVENT)
                     broadcastIntent.putExtra(UsbManager.EXTRA_DEVICE, usbDevice)
                     sendBroadcast(broadcastIntent)

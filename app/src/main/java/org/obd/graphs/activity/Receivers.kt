@@ -200,16 +200,30 @@ internal fun MainActivity.receive(intent: Intent?) {
         AA_EDIT_PREF_SCREEN -> navigateToPreferencesScreen("pref.aa")
 
         UsbManager.ACTION_USB_DEVICE_DETACHED -> {
-            val usbDevice: UsbDevice = intent.extras?.get(UsbManager.EXTRA_DEVICE) as UsbDevice
-            toast(R.string.pref_usb_device_detached, usbDevice.productName!!)
+            val usbDevice = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+            }
+            usbDevice?.let {
+                toast(R.string.pref_usb_device_detached, it.productName ?: "")
+            }
             withDataLogger {
                 stop()
             }
         }
 
         USB_DEVICE_ATTACHED_EVENT -> {
-            val usbDevice: UsbDevice = intent.extras?.get(UsbManager.EXTRA_DEVICE) as UsbDevice
-            toast(R.string.pref_usb_device_attached, usbDevice.productName!!)
+            val usbDevice = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+            }
+            usbDevice?.let {
+                toast(R.string.pref_usb_device_attached, it.productName ?: "")
+            }
         }
 
         DATA_LOGGER_DTC_AVAILABLE ->

@@ -1,0 +1,58 @@
+<resources>
+    <string name="dialog.screen.lock.trip.load.message">A viagem está sendo carregada. Isso pode demorar um pouco... Por favor, feche a janela ao terminar.</string>
+    <string name="pref.dialog.screen.lock.logger_connect.message">Por favor, aguarde. A conexão com o adaptador pode demorar um pouco...</string>
+
+    <string name="dialog.screen.lock.trip.save.message">A viagem está sendo salva. Isso pode demorar um pouco...</string>
+    <string name="main_activity.toast.connection.error">Ocorreu um erro durante a conexão. Por favor, tente conectar novamente. Se isso não ajudar, verifique suas configurações de conexão.</string>
+    <string name="main_activity.toast.connection.stopped">A conexão com o dispositivo foi interrompida.</string>
+    <string name="main_activity.toast.connection.established">Conexão com o dispositivo estabelecida.\nIniciando a coleta de dados da ECU.</string>
+    <string name="main_activity.toast.connection.connecting">Conectando ao dispositivo.</string>
+    <string name="main_activity.toast.connection.connect_error">Erro ao conectar.\nPor favor, verifique suas configurações de rede.</string>
+    <string name="main_activity.toast.connection.no_network">A conexão de rede pode estar desligada.\nPor favor, verifique suas configurações.</string>
+    <string name="main_activity.toast.adapter_is_not_selected">Adaptador não selecionado. Por favor, selecione um Adaptador e tente novamente.</string>
+    <string name="main_activity.toast.connection.wifi.incorrect_ssid">Por favor, atualize as configurações de WIFI.</string>
+    <string name="main_activity.toast.connection.wifi.not_connected">Por favor, conecte-se a uma rede WIFI.</string>
+    <string name="main_activity.toast.backup.failed">Falha na operação de backup. Por favor, repita a operação.</string>
+    <string name="main_activity.toast.backup.successful">Operação de backup concluída com sucesso.</string>
+    <string name="main_activity.toast.backup.restore.no_files">A operação de restauração não foi concluída. Não há arquivos de backup disponíveis.</string>
+    <string name="main_activity.toast.backup.restore.failed">Falha na operação de restauração. Por favor, repita a operação.</string>
+    <string name="main_activity.toast.backup.restore.successful">Operação de restauração concluída com sucesso.</string>
+
+    <string name="main_activity.toast.trips.upload.failed">Falha no envio das viagens.</string>
+    <string name="main_activity.toast.trips.upload.successful">Envio das viagens concluído com sucesso.</string>
+    <string name="main_activity.toast.trips.upload.no_files_selected">Nenhum arquivo selecionado. Nada foi enviado.</string>
+    <string name="main_activity.toast.google.signin.failed_restart">O login do Google não está funcionando no momento. Por favor, reinicie o aplicativo.</string>
+    <string name="main_activity.toast.google.signin.failed">O login do Google não está funcionando no momento. Pode ser uma falha temporária. Por favor, tente novamente em breve.</string>
+
+    <string name="permissions.missing.bt_msg">Para se comunicar com seu veículo, por favor, permita o acesso ao Bluetooth.</string>
+    <string name="permissions.missing.location_msg">Para acessar a rede WIFI, registrar a rota e a velocidade da sua viagem, por favor, permita o acesso à Localização.</string>
+    <string name="permission.onboarding_title">Configuração Necessária</string>
+    <string name="permission_onboarding_message"><![CDATA[
+Para fornecer funcionalidade total, por favor, permita o seguinte nas próximas etapas:<br/><br/>
+• <b>Otimização de Bateria</b>: Para garantir que o registro de dados não seja interrompido.<br/>
+• <b>Localização</b>: Para rastrear sua viagem via GPS.<br/>
+• <b>Bluetooth</b>: Para conectar ao seu adaptador OBD.<br/>
+• <b>Notificações</b>: Para manter o registro funcionando em segundo plano.
+]]></string>
+    <string name="permission.onboarding_btn_positive">Começar Configuração</string>
+    <string name="permission.onboarding_btn_negative">Depois</string>
+
+    <string name="language_selection_title">Selecionar Idioma</string>
+    <string name="pref.language.title">Idioma</string>
+    <string name="pref.language.summary">Escolha o idioma do aplicativo</string>
+
+    <string-array name="language_names">
+        <item>Padrão do sistema</item>
+        <item>Inglês</item>
+        <item>Polonês</item>
+        <item>Português (Brasil)</item>
+    </string-array>
+
+    <string-array name="language_codes">
+        <item></item>
+        <item>en</item>
+        <item>pl</item>
+        <item>pt</item>
+    </string-array>
+
+</resources>

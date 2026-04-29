@@ -40,6 +40,7 @@ fun SharedPreferences.Editor.updatePreference(
         }
 
         is Set<*> -> {
+            @Suppress("UNCHECKED_CAST")
             putStringSet(prefName, value as MutableSet<String>?)
         }
 

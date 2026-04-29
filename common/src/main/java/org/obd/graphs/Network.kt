@@ -49,7 +49,12 @@ object Network {
             context: Context,
             intent: Intent
         ) {
-            val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+            val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+            }
 
             when (intent.action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> {
@@ -127,11 +132,14 @@ object Network {
             try {
                 val wifiManager =
                     getContext()?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                @Suppress("DEPRECATION")
                 wifiManager.startScan()
                 val ll = mutableListOf<String>()
                 wifiManager.scanResults.forEach {
-                    Log.d(LOG_LEVEL, "Found WIFI SSID: ${it.SSID}")
-                    ll.add(it.SSID)
+                    @Suppress("DEPRECATION")
+                    val ssid = it.SSID
+                    Log.d(LOG_LEVEL, "Found WIFI SSID: $ssid")
+                    ll.add(ssid)
                 }
                 ll
             } catch (e: SecurityException) {
@@ -212,8 +220,10 @@ object Network {
         try {
             bluetoothAdapter()?.let {
                 if (enable) {
+                    @Suppress("DEPRECATION")
                     it.enable()
                 } else {
+                    @Suppress("DEPRECATION")
                     it.disable()
                 }
             }
@@ -231,6 +241,7 @@ object Network {
 
         getContext()?.let { it ->
             (it.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.apply {
+                @Suppress("DEPRECATION")
                 isWifiEnabled = enable
             }
         }

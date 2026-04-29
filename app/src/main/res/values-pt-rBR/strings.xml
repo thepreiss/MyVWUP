@@ -1,0 +1,54 @@
+<resources>
+    <string name="nav_open">Abrir</string>
+    <string name="nav_close">Fechar</string>
+
+    <string name="app_name">My UP</string>
+    <string name="navigation.title_gauge">Manômetros</string>
+    <string name="navigation.title_giulia">Giulia</string>
+    <string name="navigation.title_preferences">Ajustes</string>
+    <string name="navigation.title_dashboard">Painel</string>
+    <string name="navigation.title_UP">UP!</string>
+    <string name="navigation.title_drag_racing">Arrancada</string>
+    <string name="navigation.title_trip_info">Viagem</string>
+    <string name="navigation.title_performance">Performance</string>
+
+    <string name="pid.metric_name">Métrica</string>
+    <string name="pid.value">Valor</string>
+    <string name="pid.value_no_data">Sem dados</string>
+    <string name="pid.value_min">Mín</string>
+    <string name="pid.value_avg">Méd</string>
+    <string name="pid.value_max">Máx</string>
+
+    <string name="context_menu.profiles">Perfis do Veículo</string>
+    <string name="context_menu.about">Sobre</string>
+    <string name="context_menu.extra_views">Visões Extras</string>
+
+    <string name="pref.connection.category">Conexão do Adaptador OBD2</string>
+    <string name="pref.connection.connection_type">Tipo de Conexão</string>
+    <string name="pref.adapter_id">Dispositivos Bluetooth disponíveis</string>
+    
+    <string name="pref.aa.title">Android Auto</string>
+    <string name="pref.aa.renderer_type">Tipo de Tela</string>
+    
+    <string name="pref.profile.category">Perfis do Veículo</string>
+    <string name="pref.profile.available_list">Perfis disponíveis</string>
+    <string name="pref.profile.reset">Resetar para padrão de fábrica</string>
+    <string name="pref.profile.save_user_settings">Salvar preferências do perfil</string>
+
+    <string name="pref.settings">Configurações</string>
+    <string name="pref.about_title">Sobre</string>
+    
+    <string name="dialog_ask_question_yes">Sim</string>
+    <string name="dialog_ask_question_no">Não</string>
+    <string name="dialog_save_action">Salvar</string>
+
+    <string name="status_panel.adapter_connection_type">Adaptador</string>
+    <string name="status_panel.vehicle_profile">Perfil</string>
+    <string name="status_panel.vehicle_status">Status do Veículo</string>
+
+    <string name="pref.aa.gti.category">Personalização do Painel GTI</string>
+    <string name="pref.aa.gti.left_pid">Relógio Esquerdo</string>
+    <string name="pref.aa.gti.center_pid">Relógio Central</string>
+    <string name="pref.aa.gti.profiles">Perfis do Painel GTI</string>
+    <string name="pref.aa.gti.profiles_summary">Configure os sensores para cada um dos 4 perfis do Painel GTI</string>
+</resources>

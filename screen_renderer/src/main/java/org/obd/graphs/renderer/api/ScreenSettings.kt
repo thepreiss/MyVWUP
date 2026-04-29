@@ -130,6 +130,27 @@ data class DragRacingScreenSettings(
     var brakeBoostingSettings: BrakeBoostingSettings = BrakeBoostingSettings()
 )
 
+open class GtiScreenSettings : VirtualScreenConfig {
+    var leftPid: Long = 0L
+    var centerPid: Long = 1002L
+    var rightPid: Long = 5L
+    private var virtualScreen: Int = 1
+
+    override val selectedPIDs: Set<Long>
+        get() = setOf(leftPid, centerPid, rightPid, 51L, 11L, 35L)
+
+    override fun getPIDsSortOrder(): Map<Long, Int>? = emptyMap()
+
+    override fun getVirtualScreen(): Int = virtualScreen
+
+    override fun setVirtualScreen(id: Int) {
+        virtualScreen = id
+    }
+
+    override fun updateSelectedPIDs(pids: Set<Long>) {
+    }
+}
+
 data class TripInfoScreenSettings(
     var fontSize: Int = 24,
     var viewEnabled: Boolean = true
@@ -214,6 +235,8 @@ interface ScreenSettings {
     fun getGaugeScreenSettings(): GaugeScreenSettings = GaugeScreenSettings()
 
     fun getGiuliaScreenSettings(): GiuliaScreenSettings = GiuliaScreenSettings()
+
+    fun getGtiScreenSettings(): GtiScreenSettings = GtiScreenSettings()
 
     fun isScrollbarEnabled(): Boolean = false
 
