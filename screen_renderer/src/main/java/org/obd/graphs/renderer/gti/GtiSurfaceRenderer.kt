@@ -12,8 +12,7 @@ import org.obd.graphs.renderer.AbstractSurfaceRenderer
 import org.obd.graphs.renderer.api.Fps
 import org.obd.graphs.renderer.api.GtiScreenSettings
 import org.obd.graphs.renderer.api.ScreenSettings
-import kotlin.math.min
-import kotlin.math.abs
+import kotlin.math.*
 
 class GtiSurfaceRenderer(
     context: Context,
@@ -27,6 +26,10 @@ class GtiSurfaceRenderer(
     
     private var gForceX = 0.0f
     private var gForceY = 0.0f
+    
+    // Two-stage filter variables
+    private var rawGX = 0.0f
+    private var rawGY = 0.0f
 
     private var lastArea = Rect()
     private var headerHeight = 0f
@@ -37,8 +40,8 @@ class GtiSurfaceRenderer(
     private var cy = 0f
 
     init {
-        val sensor = sensorManager?.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
-        sensorManager?.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
+        val linearSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+        sensorManager?.registerListener(this, linearSensor, SensorManager.SENSOR_DELAY_UI)
     }
 
     override fun onSurfaceClick(x: Float, y: Float) {
@@ -57,62 +60,69 @@ class GtiSurfaceRenderer(
             drawer.drawHeader(canvas, area, headerHeight)
 
             val metrics = metricsCollector.getMetrics()
-            val baro = metrics.find { it.pid.id == 51L }?.source?.toString()?.toDoubleOrNull() ?: 1.0
-            
+            val baro = metrics.find { it.pid.id == 51L }?.value?.toString()?.toDoubleOrNull() ?: 1.0
             val gtiSettings = settings.getGtiScreenSettings()
-            
-            // Left Gauge
-            val leftPid = gtiSettings.leftPid
-            if (leftPid == 0L) {
-                drawer.drawGauge(canvas, null, cx1, cy, gaugeRadius, "FORÇA G", type = "GFORCE", gX = gForceX, gY = gForceY)
-            } else {
-                val metric = metrics.find { it.pid.id == leftPid }
-                drawer.drawGauge(canvas, metric, cx1, cy, gaugeRadius, getLabel(leftPid))
-            }
 
-            // Center Gauge
-            val centerPid = gtiSettings.centerPid
-            val centerMetric = metrics.find { it.pid.id == centerPid }
-
-            if (centerPid == 0L) {
-                drawer.drawGauge(canvas, null, cx2, cy, gaugeRadius, "FORÇA G", type = "GFORCE", gX = gForceX, gY = gForceY)
-            } else if (centerPid == 1002L) {
-                val manifold = metrics.find { it.pid.id == 11L }?.source?.toString()?.toDoubleOrNull() ?: baro
-                val boost = manifold - baro
-                drawer.drawGauge(canvas, centerMetric, cx2, cy, gaugeRadius, "TURBO", customValue = boost)
-            } else if (centerPid == 35L && centerMetric != null) {
-                val rawValue = centerMetric.source.toString().toDoubleOrNull() ?: 0.0
-                val barValue = if (rawValue > 1000) rawValue / 100.0 else rawValue
-                drawer.drawGauge(canvas, centerMetric, cx2, cy, gaugeRadius, "COMBUSTÍVEL", customValue = barValue)
-            } else {
-                drawer.drawGauge(canvas, centerMetric, cx2, cy, gaugeRadius, getLabel(centerPid))
-            }
-
-            // Right Gauge
-            val rightPid = gtiSettings.rightPid
-            if (rightPid == 0L) {
-                drawer.drawGauge(canvas, null, cx3, cy, gaugeRadius, "FORÇA G", type = "GFORCE", gX = gForceX, gY = gForceY)
-            } else {
-                val rightMetric = metrics.find { it.pid.id == rightPid }
-                drawer.drawGauge(canvas, rightMetric, cx3, cy, gaugeRadius, getLabel(rightPid))
-            }
+            // Draw Gauges
+            drawGtiGauge(canvas, metrics, gtiSettings.leftPid, cx1, cy, baro)
+            drawGtiGauge(canvas, metrics, gtiSettings.centerPid, cx2, cy, baro)
+            drawGtiGauge(canvas, metrics, gtiSettings.rightPid, cx3, cy, baro)
         }
+    }
+
+    private fun drawGtiGauge(canvas: Canvas, metrics: List<org.obd.graphs.bl.collector.Metric>, pidId: Long, cx: Float, cy: Float, baro: Double) {
+        if (pidId == 0L) {
+            drawer.drawGauge(canvas, null, cx, cy, gaugeRadius, "G-FORCE", type = "GFORCE", gX = gForceX, gY = gForceY)
+            return
+        }
+
+        val metric = metrics.find { it.pid.id == pidId }
+        var customValue: Double? = null
+
+        // Only Turbo needs a runtime calculation (MAP - Baro = boost pressure).
+        // All other PIDs already have their formula applied via extra.json.
+        if (pidId == 1002L) {
+            val manifold = metrics.find { it.pid.id == 11L }?.value?.toString()?.toDoubleOrNull() ?: baro
+            customValue = (manifold - baro).coerceAtLeast(-1.0)
+        }
+
+        drawer.drawGauge(canvas, metric, cx, cy, gaugeRadius, getLabel(pidId), pidId = pidId, customValue = customValue)
     }
 
     private fun getLabel(pid: Long): String = when(pid) {
         1002L -> "TURBO"
-        35L -> "COMBUSTÍVEL"
+        35L -> "PRESSÃO COMBUSTÍVEL"
+        58L -> "PRESSÃO ALTA"
         12L -> "RPM"
         4L -> "CARGA"
+        67L -> "CARGA ABSOLUTA"
         17L -> "BORBOLETA"
+        69L -> "BORBOLETA RELATIVA"
+        71L -> "BORBOLETA ABS B"
         66L -> "VOLTAGEM"
         5L -> "ARREFECIMENTO"
         15L -> "ADMISSÃO"
         60L -> "CATALISADOR"
         82L -> "ETANOL"
-        12L -> "RPM"
+        13L -> "VELOCIDADE"
         14L -> "AVANÇO"
-        else -> "G-FORCE"
+        52L -> "SONDA 1 RAZÃO"
+        102L -> "SONDA 1 CORRENTE"
+        20L -> "SONDA 2 TENSÃO"
+        6L -> "STFT"
+        7L -> "LTFT"
+        47L -> "NÍVEL TANQUE"
+        70L -> "AMBIENTE"
+        73L -> "PEDAL D"
+        74L -> "PEDAL E"
+        78L -> "ATUADOR"
+        11L -> "MAP"
+        33L -> "DISTÂNCIA MIL"
+        48L -> "WARM-UPS"
+        49L -> "DISTÂNCIA CLEAR"
+        68L -> "AR/COMB COMANDADO"
+        94L -> "PURGA EVAP"
+        else -> metricsCollector.getMetrics().find { it.pid.id == pid }?.pid?.description?.uppercase() ?: "PID $pid"
     }
 
     private fun updateLayout(area: Rect) {
@@ -131,12 +141,36 @@ class GtiSurfaceRenderer(
         event?.let {
             if (it.sensor.type == Sensor.TYPE_LINEAR_ACCELERATION) {
                 val gravity = 9.80665f
-                val rawX = it.values[0] / gravity
-                // Detect longitudinal axis (usually Y or Z)
-                val rawY = (if (abs(it.values[1]) > abs(it.values[2])) it.values[1] else it.values[2]) / gravity
                 
-                gForceX = gForceX * 0.85f + rawX * 0.15f
-                gForceY = gForceY * 0.85f + (-rawY) * 0.15f
+                // Device coordinates: X is lateral, Y is longitudinal (for portrait mount)
+                val latG = it.values[0] / gravity
+                val lonG = it.values[1] / gravity
+
+                // --- Stage 1: Pre-filter (Agressive noise reduction for vibrations) ---
+                val preFilterGain = 0.08f
+                rawGX = rawGX * (1f - preFilterGain) + latG * preFilterGain
+                rawGY = rawGY * (1f - preFilterGain) + lonG * preFilterGain
+
+                // --- Stage 2: Polar Clamping & Dead Zone ---
+                var finalX = rawGX
+                var finalY = -rawGY // Invert Y for screen coordinates (forward is negative Y)
+                
+                val magnitude = sqrt(finalX * finalX + finalY * finalY)
+                
+                // Dead zone (0.03G)
+                if (magnitude < 0.03f) {
+                    finalX = 0f
+                    finalY = 0f
+                } else if (magnitude > 1.0f) {
+                    // Polar clamping: keep direction, limit magnitude to 1.0G
+                    finalX *= (1.0f / magnitude)
+                    finalY *= (1.0f / magnitude)
+                }
+
+                // --- Stage 3: Display Filter (Smooth visual movement) ---
+                val displayFilterGain = 0.20f
+                gForceX = gForceX * (1f - displayFilterGain) + finalX * displayFilterGain
+                gForceY = gForceY * (1f - displayFilterGain) + finalY * displayFilterGain
             }
         }
     }

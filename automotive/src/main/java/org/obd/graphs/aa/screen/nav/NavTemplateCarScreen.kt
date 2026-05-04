@@ -74,6 +74,7 @@ import org.obd.graphs.registerReceiver
 import org.obd.graphs.renderer.api.DynamicSelectorMode
 import org.obd.graphs.renderer.api.Fps
 import org.obd.graphs.renderer.api.Identity
+import org.obd.graphs.renderer.api.SurfaceRendererType
 
 const val SURFACE_DESTROYED_EVENT = "car.event.surface.destroyed"
 const val SURFACE_AREA_CHANGED_EVENT = "car.event.surface.area_changed"
@@ -256,13 +257,14 @@ internal class NavTemplateCarScreen(
         if (surfaceRendererScreen.isSurfaceRendererScreen(identity)) {
             surfaceRendererScreen.switchSurfaceRenderer(identity)
             invalidate()
+        } else if (identity == SurfaceRendererType.DIAGNOSTICS) {
+            surfaceRendererScreen.resetSurfaceRenderer()
+            val diagnosticsScreen = DiagnosticsScreen(carContext, settings, metricsCollector, fps)
+            screenManager.push(diagnosticsScreen)
         } else {
             surfaceRendererScreen.resetSurfaceRenderer()
             val routinesScreen = RoutinesScreen(carContext, settings, metricsCollector, fps)
-            lifecycle.addObserver(routinesScreen)
-            screenManager.pushForResult(routinesScreen) {
-                lifecycle.removeObserver(routinesScreen)
-            }
+            screenManager.push(routinesScreen)
         }
     }
 

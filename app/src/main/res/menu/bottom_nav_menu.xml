@@ -121,6 +121,13 @@
                 app:showAsAction="always" />
 
             <item
+                android:id="@+id/navigation_giulia"
+                android:icon="@drawable/ic_giulia"
+                android:title="@string/navigation.title_giulia"
+                android:tooltipText="@string/navigation.tooltip_giulia_dashboard"
+                app:showAsAction="always" />
+
+            <item
                 android:icon="@drawable/action_drag_race"
                 app:showAsAction="ifRoom|withText"
                 android:id="@+id/ctx_menu_drag_racing_view"

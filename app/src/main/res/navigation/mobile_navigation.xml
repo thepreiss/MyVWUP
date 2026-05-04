@@ -30,10 +30,10 @@
         tools:layout="@layout/fragment_performance" />
 
     <fragment
-        android:id="@+id/nav_giulia"
-        android:name="org.obd.graphs.ui.giulia.GiuliaRendererFragment"
-        android:label="@string/navigation.title_giulia"
-        tools:layout="@layout/fragment_giulia" />
+        android:id="@+id/navigation_giulia"
+        android:name="org.obd.graphs.ui.dtc.DTCFragment"
+        android:label="@string/navigation.title_diagnostics"
+        tools:layout="@layout/fragment_dtc" />
 
     <fragment
         android:id="@+id/nav_dashboard"

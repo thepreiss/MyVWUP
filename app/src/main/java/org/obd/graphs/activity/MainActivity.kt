@@ -248,7 +248,7 @@ class MainActivity :
     fun getAppBarConfiguration(): AppBarConfiguration =
         AppBarConfiguration(
             setOf(
-                R.id.nav_giulia,
+                R.id.navigation_giulia,
                 R.id.nav_graph,
                 R.id.nav_gauge
             ),

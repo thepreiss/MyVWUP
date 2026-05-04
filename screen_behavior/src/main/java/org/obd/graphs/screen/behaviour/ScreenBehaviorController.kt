@@ -64,6 +64,7 @@ class ScreenBehaviorController(
 
                 SurfaceRendererType.GTI ->
                     GtiScreenBehavior(context, metricsCollector, settings, fps)
+                else -> GiuliaScreenBehavior(context, metricsCollector, settings, fps)
             }
         }
     }

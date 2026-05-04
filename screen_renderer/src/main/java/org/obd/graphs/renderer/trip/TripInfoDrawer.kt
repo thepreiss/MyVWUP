@@ -17,20 +17,11 @@
 package org.obd.graphs.renderer.trip
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.Typeface
+import android.graphics.*
 import org.obd.graphs.bl.collector.Metric
-import org.obd.graphs.bl.collector.MetricsBuilder
-import org.obd.graphs.format
-import org.obd.graphs.mapRange
+import org.obd.graphs.bl.trip.tripManager
 import org.obd.graphs.renderer.AbstractDrawer
-import org.obd.graphs.renderer.MARGIN_END
 import org.obd.graphs.renderer.api.ScreenSettings
-import org.obd.graphs.renderer.cache.TextCache
-import org.obd.graphs.renderer.giulia.GiuliaDrawer
-import org.obd.graphs.toNumber
 
 private const val CURRENT_MIN = 22f
 private const val CURRENT_MAX = 72f
@@ -71,309 +62,136 @@ internal class TripInfoDrawer(
     context: Context,
     settings: ScreenSettings
 ) : AbstractDrawer(context, settings) {
-    private val metricBuilder = MetricsBuilder()
-    private val giuliaDrawer = GiuliaDrawer(context, settings)
 
-    private val layoutCache = TripInfoLayoutCache()
-    private val textCache = TextCache()
-    private val defaultTypeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+    private val vwTypeface: Typeface = Typeface.createFromAsset(context.assets, "vw_font.ttf")
 
-    private val topMetricDescriptors = listOf(
-        TripMetricDescriptor({ info: TripInfoDetails -> info.airTemp }, castToInt = true),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.coolantTemp }, castToInt = true),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.oilTemp }, castToInt = true),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.exhaustTemp }, castToInt = true),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.gearboxOilTemp }, castToInt = true),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.distance?.let { d -> metricBuilder.buildDiff(d) } }, statsEnabled = false),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.fuellevel }, valueDoublePrecision = 1, statsDoublePrecision = 1),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.fuelConsumption }, unitEnabled = false, statsDoublePrecision = 1),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.batteryVoltage }),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.ibs }, castToInt = true),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.oilLevel }),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.totalMisfires }, castToInt = true, unitEnabled = false, statsEnabled = false),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.oilDegradation }, unitEnabled = false),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.engineSpeed }, unitEnabled = false),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.vehicleSpeed }, unitEnabled = false),
-        TripMetricDescriptor({ info: TripInfoDetails -> info.gearEngaged }, unitEnabled = false)
-    )
+    private val tripHeaderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.LTGRAY
+        textAlign = Paint.Align.CENTER
+        typeface = vwTypeface
+    }
 
-    private val bottomMetricDescriptors = listOf(
-        BottomMetricDescriptor({ info: TripInfoDetails -> info.intakePressure }, true),
-        BottomMetricDescriptor({ info: TripInfoDetails -> info.oilPressure }, false),
-        BottomMetricDescriptor({ info: TripInfoDetails -> info.torque }, true)
-    )
+    private val tripLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        textAlign = Paint.Align.LEFT
+        typeface = vwTypeface
+    }
+
+    private val tripValuePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.CYAN
+        textAlign = Paint.Align.RIGHT
+        typeface = Typeface.create(vwTypeface, Typeface.BOLD)
+    }
+
+    private val tripUnitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.LTGRAY
+        textAlign = Paint.Align.LEFT
+        typeface = vwTypeface
+    }
+
+    private val background: Bitmap =
+        BitmapFactory.decodeResource(
+            context.resources,
+            org.obd.graphs.renderer.R.drawable.background
+        )
 
     override fun invalidate() {
         super.invalidate()
-        giuliaDrawer.invalidate()
-        textCache.clear()
-        layoutCache.area.setEmpty()
-        layoutCache.activeBottomMetricsCount = -1
     }
+
+    override fun getBackground(): Bitmap = background
 
     override fun recycle() {
-        super.recycle()
-        giuliaDrawer.recycle()
-        textCache.clear()
+        this.background.recycle()
     }
 
-    inline fun drawScreen(
+    fun drawScreen(
         canvas: Canvas,
         area: Rect,
         left: Float,
         top: Float,
         tripInfo: TripInfoDetails
     ) {
-        var currentBottomCount = 0
-        for (i in bottomMetricDescriptors.indices) {
-            if (bottomMetricDescriptors[i].fetcher.invoke(tripInfo) != null) {
-                currentBottomCount++
-            }
-        }
+        val margin = 30f
+        val startLeft = left + margin
+        val availableWidth = area.width() - (2 * margin)
+        
+        // Header
+        tripHeaderPaint.textSize = area.height() * 0.05f
+        canvas.drawText("COMPUTADOR DE BORDO", area.centerX().toFloat(), top + 20f, tripHeaderPaint)
+        drawDivider(canvas, startLeft, availableWidth, top + 35f, Color.DKGRAY)
 
-        if (layoutCache.requiresLayoutUpdate(area, currentBottomCount)) {
-            calculateLayout(area, tripInfo, currentBottomCount)
-        }
+        val rowHeight = area.height() * 0.16f
+        val colWidth = availableWidth / 2f
+        var currentRowTop = top + 100f
+        
+        val labelSize = (area.height() * 0.045f).coerceAtMost(35f)
+        val valueSize = (area.height() * 0.08f).coerceAtMost(70f)
+        val unitSize = (area.height() * 0.035f).coerceAtMost(25f)
+        
+        tripLabelPaint.textSize = labelSize
+        tripValuePaint.textSize = valueSize
+        tripUnitPaint.textSize = unitSize
 
-        val textSizeBase = layoutCache.textSizeBase
-        val valueTextSize = layoutCache.valueTextSize
-        val dynamicPadding = textSizeBase * 0.1f
-        val x = maxItemWidth(area)
+        // 1. DISTANCE & TRIP TIME
+        val distValue = tripInfo.distance?.value?.toString() ?: "---"
+        drawValueWithLabel(canvas, "DISTÂNCIA", distValue, startLeft, currentRowTop, colWidth, "km")
+        
+        // Trip Time calculation
+        val startTs = tripManager.getCurrentTrip().startTs
+        val durationMs = if (startTs > 0) System.currentTimeMillis() - startTs else 0
+        val hours = durationMs / 3600000
+        val minutes = (durationMs % 3600000) / 60000
+        val seconds = (durationMs % 60000) / 1000
+        val timeText = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        
+        canvas.drawText("TEMPO", startLeft + colWidth, currentRowTop, tripLabelPaint)
+        canvas.drawText(timeText, startLeft + availableWidth, currentRowTop + (valueSize * 0.8f), tripValuePaint)
+        
+        currentRowTop += rowHeight
+        drawDivider(canvas, startLeft, availableWidth, currentRowTop - (rowHeight * 0.35f), Color.parseColor("#1AFFFFFF"))
 
-        var rowTop = top + (textSizeBase * 0.3f)
-        var colIndex = 0
+        // 2. SPEED (AVG & MAX)
+        val speedMetric = tripInfo.vehicleSpeed
+        val avgSpeed = speedMetric?.mean?.toInt()?.toString() ?: "---"
+        val maxSpeed = speedMetric?.max?.toInt()?.toString() ?: "---"
+        
+        drawValueWithLabel(canvas, "VELOC. MÉDIA", avgSpeed, startLeft, currentRowTop, colWidth, "km/h")
+        drawValueWithLabel(canvas, "VELOC. MÁXIMA", maxSpeed, startLeft + colWidth, currentRowTop, colWidth, "km/h")
 
-        for (i in topMetricDescriptors.indices) {
-            val descriptor = topMetricDescriptors[i]
-            val metric = descriptor.fetcher.invoke(tripInfo) ?: continue
+        currentRowTop += rowHeight
+        drawDivider(canvas, startLeft, availableWidth, currentRowTop - (rowHeight * 0.35f), Color.parseColor("#1AFFFFFF"))
 
-            if (colIndex >= MAX_ITEM_IN_THE_ROW) {
-                colIndex = 0
-                rowTop += (textSizeBase * 1.8f)
-            }
+        // 3. CONSUMPTION (AVG & INSTANT)
+        val consMetric = tripInfo.fuelConsumption
+        val avgCons = if (consMetric != null && consMetric.mean > 0) String.format("%.1f", consMetric.mean) else "---"
+        val instCons = consMetric?.value?.toString() ?: "---"
 
-            drawMetric(
-                metric = metric,
-                top = rowTop,
-                left = left + (colIndex * x) + dynamicPadding,
-                canvas = canvas,
-                textSizeBase = textSizeBase,
-                statsEnabled = descriptor.statsEnabled,
-                unitEnabled = descriptor.unitEnabled,
-                area = area,
-                valueDoublePrecision = descriptor.valueDoublePrecision,
-                statsDoublePrecision = descriptor.statsDoublePrecision,
-                castToInt = descriptor.castToInt
-            )
-            colIndex++
-        }
+        drawValueWithLabel(canvas, "CONSUMO MÉDIO", avgCons, startLeft, currentRowTop, colWidth, "km/l")
+        drawValueWithLabel(canvas, "CONSUMO INST.", instCons, startLeft + colWidth, currentRowTop, colWidth, "km/l")
 
-        rowTop += 2.2f * textSizeBase
+        currentRowTop += rowHeight
+        drawDivider(canvas, startLeft, availableWidth, currentRowTop - (rowHeight * 0.35f), Color.parseColor("#1AFFFFFF"))
 
-        giuliaDrawer.drawDivider(
-            canvas = canvas,
-            left = left,
-            width = area.width().toFloat(),
-            top = rowTop - (textSizeBase * 0.8f),
-            color = Color.DKGRAY
-        )
-
-        rowTop += 6
-
-        var drawnBottomCount = 0
-        for (i in bottomMetricDescriptors.indices) {
-            val descriptor = bottomMetricDescriptors[i]
-            val metric = descriptor.fetcher.invoke(tripInfo) ?: continue
-
-            drawBottomMetric(
-                metric = metric,
-                castToInt = descriptor.castToInt,
-                left = left,
-                index = drawnBottomCount,
-                area = area,
-                dynamicPadding = dynamicPadding,
-                colWidth = layoutCache.bottomColWidth,
-                canvas = canvas,
-                rowTextSizeBase = layoutCache.bottomRowTextSizeBase,
-                valueTextSize = valueTextSize,
-                rowTop = rowTop
-            )
-            drawnBottomCount++
-        }
+        // 4. FUEL & RANGE
+        val fuelLevelMetric = tripInfo.fuellevel
+        val fuelLevel = fuelLevelMetric?.value?.toString() ?: "---"
+        drawValueWithLabel(canvas, "COMBUSTÍVEL", fuelLevel, startLeft, currentRowTop, colWidth, "%")
+        
+        // Range estimation (simplistic: 45L tank * level * avgCons)
+        val range = if (fuelLevel != "---" && avgCons != "---") {
+            val level = fuelLevel.toDoubleOrNull() ?: 0.0
+            val cons = avgCons.replace(",", ".").toDoubleOrNull() ?: 0.0
+            (0.45 * level * cons).toInt().toString()
+        } else "---"
+        
+        drawValueWithLabel(canvas, "AUTONOMIA", range, startLeft + colWidth, currentRowTop, colWidth, "km")
     }
 
-    private fun calculateLayout(area: Rect, tripInfo: TripInfoDetails, validBottomMetricsCount: Int) {
-        layoutCache.area.set(area)
-        layoutCache.activeBottomMetricsCount = validBottomMetricsCount
-
-        val scaleRatio = getScaleRatio()
-        val areaWidth = area.width()
-
-        layoutCache.valueTextSize = (areaWidth / 17f) * scaleRatio
-        layoutCache.textSizeBase = (areaWidth / 22f) * scaleRatio
-
-        if (validBottomMetricsCount > 0) {
-            val colWidth = areaWidth / validBottomMetricsCount.toFloat()
-            layoutCache.bottomColWidth = colWidth
-
-            var rowTextSizeBase = layoutCache.textSizeBase
-
-            bottomMetricDescriptors.forEach { descriptor ->
-                val metric = descriptor.fetcher.invoke(tripInfo) ?: return@forEach
-                val pid = metric.source.command.pid
-
-                val description = pid.longDescription?.takeIf { it.isNotEmpty() } ?: pid.description
-                val longestLine = description.split("\n").maxByOrNull { it.length } ?: description
-
-                titlePaint.textSize = layoutCache.textSizeBase
-                val titleWidth = getTextWidth(longestLine, titlePaint)
-                val maxTitleWidth = colWidth * 0.75f
-
-                if (titleWidth > maxTitleWidth && titleWidth > 0f) {
-                    val scaleFactor = maxTitleWidth / titleWidth
-                    rowTextSizeBase = minOf(rowTextSizeBase, layoutCache.textSizeBase * scaleFactor)
-                }
-            }
-            layoutCache.bottomRowTextSizeBase = rowTextSizeBase
-        }
-    }
-
-    fun drawBottomMetric(
-        metric: Metric,
-        castToInt: Boolean,
-        left: Float,
-        index: Int,
-        area: Rect,
-        dynamicPadding: Float,
-        colWidth: Float,
-        canvas: Canvas,
-        rowTextSizeBase: Float,
-        valueTextSize: Float,
-        rowTop: Float
-    ) {
-        val metricLeft = left + (index * colWidth) + dynamicPadding
-        val metricRight = metricLeft + colWidth - dynamicPadding
-        val valueLeft = metricRight - MARGIN_END
-        val boundedArea = Rect(metricLeft.toInt(), area.top, metricRight.toInt(), area.bottom)
-
-        giuliaDrawer.drawMetric(
-            canvas = canvas,
-            area = boundedArea,
-            metric = metric,
-            textSizeBase = rowTextSizeBase * 0.8f,
-            valueTextSize = valueTextSize * 0.8f,
-            left = metricLeft,
-            top = rowTop,
-            valueLeft = valueLeft,
-            valueCastToInt = castToInt
-        )
-    }
-
-    private inline fun getScaleRatio() =
-        settings.getTripInfoScreenSettings().fontSize.toFloat().mapRange(
-            CURRENT_MIN,
-            CURRENT_MAX,
-            NEW_MIN,
-            NEW_MAX
-        )
-
-    private fun drawValue(
-        canvas: Canvas,
-        metric: Metric,
-        top: Float,
-        textSize: Float,
-        left: Float,
-        statsEnabled: Boolean,
-        unitEnabled: Boolean,
-        area: Rect,
-        valueDoublePrecision: Int = 2,
-        statsDoublePrecision: Int = 2,
-        castToInt: Boolean = false
-    ) {
-        valuePaint.typeface = defaultTypeface
-        valuePaint.color = valueColorScheme(metric)
-        valuePaint.setShadowLayer(80f, 0f, 0f, Color.WHITE)
-        valuePaint.textSize = textSize
-
-        val text = textCache.value.get(metric.pid.id, metric.source.toNumber()) {
-            metric.source.format(castToInt = castToInt, precision = valueDoublePrecision)
-        }
-
-        val textPadding = textSize * 0.05f
-
-        canvas.drawText(text, left, top, valuePaint)
-        var textWidth = getTextWidth(text, valuePaint) + textPadding
-
-        if (unitEnabled) {
-            metric.source.command.pid.units?.let {
-                valuePaint.color = Color.LTGRAY
-                valuePaint.textSize = (textSize * 0.4).toFloat()
-                canvas.drawText(it, (left + textWidth), top, valuePaint)
-                textWidth += getTextWidth(it, valuePaint) + textPadding
-            }
-        }
-
-        if (settings.isStatisticsEnabled() && statsEnabled) {
-            valuePaint.textSize = (textSize * 0.60).toFloat()
-            val pid = metric.pid
-
-            val minText = textCache.min.get(pid.id, metric.min) {
-                metric.min.format(pid = pid, precision = statsDoublePrecision, castToInt = castToInt)
-            }
-            val maxText = textCache.max.get(pid.id, metric.max) {
-                metric.max.format(pid = pid, precision = statsDoublePrecision, castToInt = castToInt)
-            }
-
-            val minWidth = getTextWidth(minText, valuePaint)
-            val maxWidth = getTextWidth(maxText, valuePaint)
-            val maxStatWidth = maxOf(minWidth, maxWidth)
-
-            val itemWidth = textWidth + maxStatWidth
-
-            if (itemWidth <= (maxItemWidth(area))) {
-                valuePaint.color = minValueColorScheme(metric)
-                canvas.drawText(minText, (left + textWidth), top, valuePaint)
-
-                valuePaint.color = maxValueColorScheme(metric)
-                canvas.drawText(
-                    maxText,
-                    (left + textWidth),
-                    top - (getTextHeight(minText, valuePaint) * 1.1f),
-                    valuePaint
-                )
-            }
-        }
-    }
-
-    private inline fun maxItemWidth(area: Rect) = (area.width() / MAX_ITEM_IN_THE_ROW)
-
-    inline fun drawMetric(
-        metric: Metric,
-        top: Float,
-        left: Float,
-        canvas: Canvas,
-        textSizeBase: Float,
-        statsEnabled: Boolean = false,
-        unitEnabled: Boolean = true,
-        area: Rect,
-        valueDoublePrecision: Int = 2,
-        statsDoublePrecision: Int = 2,
-        castToInt: Boolean = false
-    ) {
-        drawValue(
-            canvas = canvas,
-            metric = metric,
-            top = top,
-            textSize = textSizeBase * 0.8f,
-            left = left,
-            statsEnabled = statsEnabled,
-            unitEnabled = unitEnabled,
-            area = area,
-            valueDoublePrecision = valueDoublePrecision,
-            statsDoublePrecision = statsDoublePrecision,
-            castToInt = castToInt
-        )
-
-        drawTitle(canvas, metric, left, top + (textSizeBase * 0.40f), textSizeBase * 0.35F)
+    private fun drawValueWithLabel(canvas: Canvas, label: String, value: String, left: Float, top: Float, width: Float, unit: String) {
+        canvas.drawText(label, left, top, tripLabelPaint)
+        val valuePadding = 75f
+        canvas.drawText(value, left + width - valuePadding, top + (tripValuePaint.textSize * 0.8f), tripValuePaint)
+        canvas.drawText(unit, left + width - (valuePadding - 5f), top + (tripValuePaint.textSize * 0.8f), tripUnitPaint)
     }
 }

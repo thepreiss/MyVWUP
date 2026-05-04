@@ -1,45 +1,5 @@
 [
   {
-    "id": 1001,
-    "name": "Pressão de Combustível",
-    "mode": "01",
-    "pid": "3A",
-    "units": "psi",
-    "formula": "((A*256)+B)*10 * 0.145038",
-    "min": 0,
-    "max": 3000
-  },
-  {
-    "id": 1002,
-    "name": "Pressão de Turbo",
-    "mode": "01",
-    "pid": "0B",
-    "units": "bar",
-    "formula": "(A - p0133) / 100.0",
-    "min": -1,
-    "max": 3
-  },
-  {
-    "id": 82,
-    "name": "Porcentagem de Etanol",
-    "mode": "01",
-    "pid": "52",
-    "units": "%",
-    "formula": "A * 100 / 255",
-    "min": 0,
-    "max": 100
-  },
-  {
-    "id": 60,
-    "name": "Temperatura do Catalisador",
-    "mode": "01",
-    "pid": "3C",
-    "units": "C",
-    "formula": "((A*256)+B)/10 - 40",
-    "min": -40,
-    "max": 1000
-  },
-  {
     "id": 4,
     "name": "Carga do Motor",
     "mode": "01",
@@ -48,6 +8,16 @@
     "formula": "A * 100 / 255",
     "min": 0,
     "max": 100
+  },
+  {
+    "id": 5,
+    "name": "Temperatura de Arrefecimento",
+    "mode": "01",
+    "pid": "05",
+    "units": "C",
+    "formula": "A - 40",
+    "min": -40,
+    "max": 150
   },
   {
     "id": 6,
@@ -70,6 +40,106 @@
     "max": 100
   },
   {
+    "id": 11,
+    "name": "Pressão Coletor Admissão",
+    "mode": "01",
+    "pid": "0B",
+    "units": "kPa",
+    "formula": "A",
+    "min": 0,
+    "max": 255
+  },
+  {
+    "id": 1002,
+    "name": "Pressão de Turbo",
+    "mode": "01",
+    "pid": "0B",
+    "units": "bar",
+    "formula": "(A - p0133) / 100.0",
+    "min": -1,
+    "max": 3
+  },
+  {
+    "id": 12,
+    "name": "Rotações por Minuto",
+    "mode": "01",
+    "pid": "0C",
+    "units": "rpm",
+    "formula": "((A*256)+B)/4",
+    "min": 0,
+    "max": 8000
+  },
+  {
+    "id": 13,
+    "name": "Velocidade do Veículo",
+    "mode": "01",
+    "pid": "0D",
+    "units": "km/h",
+    "formula": "A",
+    "min": 0,
+    "max": 255
+  },
+  {
+    "id": 14,
+    "name": "Avanço de Ignição",
+    "mode": "01",
+    "pid": "0E",
+    "units": "°",
+    "formula": "A / 2 - 64",
+    "min": -64,
+    "max": 64
+  },
+  {
+    "id": 15,
+    "name": "Temperatura de Admissão",
+    "mode": "01",
+    "pid": "0F",
+    "units": "C",
+    "formula": "A - 40",
+    "min": -40,
+    "max": 120
+  },
+  {
+    "id": 17,
+    "name": "Posição da Borboleta",
+    "mode": "01",
+    "pid": "11",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 20,
+    "name": "Tensão Sonda 2",
+    "mode": "01",
+    "pid": "14",
+    "units": "V",
+    "formula": "A / 200",
+    "min": 0,
+    "max": 1.275
+  },
+  {
+    "id": 33,
+    "name": "Distância com MIL",
+    "mode": "01",
+    "pid": "21",
+    "units": "km",
+    "formula": "(A*256)+B",
+    "min": 0,
+    "max": 65535
+  },
+  {
+    "id": 35,
+    "name": "Pressão Combustível (Rail/Linha)",
+    "mode": "01",
+    "pid": "23",
+    "units": "bar",
+    "formula": "((A*256)+B) * 10 / 100",
+    "min": 0,
+    "max": 10
+  },
+  {
     "id": 47,
     "name": "Nível de Combustível",
     "mode": "01",
@@ -78,6 +148,26 @@
     "formula": "A * 100 / 255",
     "min": 0,
     "max": 100
+  },
+  {
+    "id": 48,
+    "name": "Warm-ups desde Clear",
+    "mode": "01",
+    "pid": "30",
+    "units": "n",
+    "formula": "A",
+    "min": 0,
+    "max": 255
+  },
+  {
+    "id": 49,
+    "name": "Distância desde Clear",
+    "mode": "01",
+    "pid": "31",
+    "units": "km",
+    "formula": "(A*256)+B",
+    "min": 0,
+    "max": 65535
   },
   {
     "id": 51,
@@ -90,6 +180,26 @@
     "max": 255
   },
   {
+    "id": 52,
+    "name": "Sonda Lambda 1 (Razão)",
+    "mode": "01",
+    "pid": "34",
+    "units": "λ",
+    "formula": "((A*256)+B) / 32768",
+    "min": 0,
+    "max": 2
+  },
+  {
+    "id": 60,
+    "name": "Temperatura do Catalisador",
+    "mode": "01",
+    "pid": "3C",
+    "units": "C",
+    "formula": "((A*256)+B)/10 - 40",
+    "min": -40,
+    "max": 1000
+  },
+  {
     "id": 66,
     "name": "Voltagem do Módulo",
     "mode": "01",
@@ -100,13 +210,43 @@
     "max": 18
   },
   {
-    "id": 70,
-    "name": "Temperatura Ambiente",
+    "id": 67,
+    "name": "Carga Absoluta",
     "mode": "01",
-    "pid": "46",
-    "units": "C",
-    "formula": "A - 40",
-    "min": -40,
+    "pid": "43",
+    "units": "%",
+    "formula": "((A*256)+B) * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 68,
+    "name": "Ar/Comb. Comandado",
+    "mode": "01",
+    "pid": "44",
+    "units": "ratio",
+    "formula": "((A*256)+B) / 32768",
+    "min": 0,
+    "max": 2
+  },
+  {
+    "id": 69,
+    "name": "Borboleta Relativa",
+    "mode": "01",
+    "pid": "45",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 71,
+    "name": "Borboleta Absoluta B",
+    "mode": "01",
+    "pid": "47",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
     "max": 100
   },
   {
@@ -130,20 +270,50 @@
     "max": 100
   },
   {
-    "id": 76,
+    "id": 78,
     "name": "Atuador da Borboleta",
     "mode": "01",
-    "pid": "4C",
+    "pid": "4E",
     "units": "%",
     "formula": "A * 100 / 255",
     "min": 0,
     "max": 100
   },
   {
-    "id": 35,
-    "name": "Pressão de Combustível (Rail)",
+    "id": 82,
+    "name": "Porcentagem de Etanol",
     "mode": "01",
-    "pid": "23",
+    "pid": "52",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 94,
+    "name": "Purga Evap. Comandada",
+    "mode": "01",
+    "pid": "5E",
+    "units": "%",
+    "formula": "A * 100 / 255",
+    "min": 0,
+    "max": 100
+  },
+  {
+    "id": 102,
+    "name": "Corrente da Sonda 1",
+    "mode": "01",
+    "pid": "66",
+    "units": "mA",
+    "formula": "((A*256)+B) / 256 - 128",
+    "min": -128,
+    "max": 128
+  },
+  {
+    "id": 58,
+    "name": "Pressão de Combustível (Alta)",
+    "mode": "01",
+    "pid": "3A",
     "units": "bar",
     "formula": "((A*256)+B) * 10 / 100",
     "min": 0,

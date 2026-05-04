@@ -20,6 +20,13 @@
     <string name="available_features.giulia_screen.title">Giulia</string>
     <string name="available_features.gauge_screen.title">Gauge</string>
     <string name="available_features.trip_info_screen.title">Trip Info</string>
+    <string name="available_features.diagnostics_screen.title">Diagnóstico</string>
+
+    <string name="diagnostics_page_title">Diagnóstico de Erros</string>
+    <string name="diagnostics_action_scan">Escanear</string>
+    <string name="diagnostics_action_clear">Limpar Erros</string>
+    <string name="diagnostics_no_errors">Nenhum erro encontrado.</string>
+    <string name="pref.dtc.no_connection_established">Não foi possível realizar a operação. Verifique se a conexão com o adaptador está estabelecida.</string>
 
     <string name="aa_stat_min">min</string>
     <string name="aa_stat_avg">avg</string>

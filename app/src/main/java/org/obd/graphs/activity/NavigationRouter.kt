@@ -111,7 +111,7 @@ internal object NavigationRouter {
             R.id.navigation_adapter_settings -> navigateToPreferencesScreen("pref.adapter")
             R.id.navigation_trip_logs -> navigateToPreferencesScreen(PREF_TRIP_LOGS)
 
-            R.id.navigation_giulia -> navigateToScreen(R.id.nav_giulia)
+            R.id.navigation_giulia -> navigateToScreen(R.id.navigation_giulia)
             R.id.navigation_graph -> navigateToScreen(R.id.nav_graph)
             R.id.navigation_gauge -> navigateToScreen(R.id.nav_gauge)
             R.id.navigation_dashboard -> navigateToScreen(R.id.nav_dashboard)
@@ -138,7 +138,7 @@ internal object NavigationRouter {
                         navigateToPreferencesScreen(PREF_GAUGE_TRIPS)
                     }
 
-                    R.id.nav_giulia -> {
+                    R.id.navigation_giulia -> {
                         tripVirtualScreenManager.updateReservedVirtualScreen(
                             Prefs
                                 .getStringSet(giuliaVirtualScreenPreferences.getVirtualScreenPrefKey())
@@ -165,7 +165,7 @@ internal object NavigationRouter {
     fun navigateToPreferences(activity: Activity): Boolean =
         navigateToPreferencesScreen(
             when (getCurrentScreenId(activity)) {
-                R.id.nav_giulia -> "pref.giulia"
+                R.id.navigation_giulia -> "pref.giulia"
                 R.id.nav_gauge -> "pref.gauge"
                 R.id.nav_graph -> "pref.graph"
                 R.id.nav_dashboard -> "pref.dashboard"
@@ -181,7 +181,7 @@ internal object NavigationRouter {
             when (getCurrentScreenId(activity)) {
                 R.id.nav_gauge -> PREFERENCE_SCREEN_KEY_GAUGE
                 R.id.nav_graph -> PREFERENCE_SCREEN_KEY_GRAPH
-                R.id.nav_giulia -> PREFERENCE_SCREEN_KEY_GIULIA
+                R.id.navigation_giulia -> PREFERENCE_SCREEN_KEY_GIULIA
                 R.id.nav_dashboard -> PREFERENCE_SCREEN_KEY_DASH
                 R.id.nav_performance -> PREFERENCE_SCREEN_KEY_PERFORMANCE
                 R.id.nav_trip_info -> PREFERENCE_SCREEN_KEY_TRIP_INFO

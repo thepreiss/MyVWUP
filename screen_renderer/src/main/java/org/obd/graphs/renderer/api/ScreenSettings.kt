@@ -131,13 +131,36 @@ data class DragRacingScreenSettings(
 )
 
 open class GtiScreenSettings : VirtualScreenConfig {
-    var leftPid: Long = 0L
+    var leftPid: Long = 12L
     var centerPid: Long = 1002L
     var rightPid: Long = 5L
     private var virtualScreen: Int = 1
 
+    // This set is sent to the DataLogger query.
+    // It MUST include every PID that could be displayed or used for calculations.
     override val selectedPIDs: Set<Long>
-        get() = setOf(leftPid, centerPid, rightPid, 51L, 11L, 35L)
+        get() = setOf(
+            leftPid, centerPid, rightPid,
+            // Support PIDs needed for calculations (barometric pressure for Turbo)
+            51L,   // Baro pressure (used by PID 1002 formula)
+            11L,   // MAP (used for raw boost calc)
+            // All cycle PIDs so polling covers full rotation range
+            12L,   // RPM
+            5L,    // Coolant
+            1002L, // Turbo
+            4L,    // Engine Load
+            17L,   // Throttle
+            15L,   // IAT
+            13L,   // Speed
+            14L,   // Timing
+            35L,   // Fuel Pressure
+            66L,   // Voltage
+            6L,    // STFT
+            7L,    // LTFT
+            52L,   // Lambda
+            47L,   // Fuel Level
+            82L    // Ethanol
+        )
 
     override fun getPIDsSortOrder(): Map<Long, Int>? = emptyMap()
 

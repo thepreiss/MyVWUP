@@ -113,7 +113,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
                         openPIDsDialog(
                             giuliaVirtualScreenPreferences.getVirtualScreenPrefKey(),
                             preference.source
-                        ) { navigateToScreen(R.id.nav_giulia) }
+                        ) { navigateToScreen(R.id.navigation_giulia) }
                     }
 
                     PREFERENCE_SCREEN_SOURCE_GAUGE -> {
@@ -303,7 +303,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
             PREFERENCE_SCREEN_KEY_GIULIA ->
                 openPIDsDialog(giuliaVirtualScreenPreferences.getVirtualScreenPrefKey(), PREFERENCE_SCREEN_SOURCE_GIULIA) {
-                    navigateToScreen(R.id.nav_giulia)
+                    navigateToScreen(R.id.navigation_giulia)
                 }
 
             PREFERENCE_SCREEN_KEY_GRAPH ->

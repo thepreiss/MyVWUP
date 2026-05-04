@@ -242,7 +242,7 @@ internal fun MainActivity.receive(intent: Intent?) {
             statusPanel.updateVehicleProfile()
             statusPanel.updateAdapterConnectionType()
 
-            toggleNavigationItem(GIULIA_VIEW_ID, R.id.nav_giulia)
+            toggleNavigationItem(GIULIA_VIEW_ID, R.id.navigation_giulia)
             toggleNavigationItem(GRAPH_VIEW_ID, R.id.nav_graph)
             toggleNavigationItem(DASH_VIEW_ID, R.id.nav_dashboard)
             toggleNavigationItem(GAUGE_VIEW_ID, R.id.nav_gauge)
@@ -259,7 +259,7 @@ internal fun MainActivity.receive(intent: Intent?) {
             toast(org.obd.graphs.commons.R.string.main_activity_toast_adapter_is_not_selected)
         }
 
-        NOTIFICATION_GIULIA_VIEW_TOGGLE -> toggleNavigationItem(GIULIA_VIEW_ID, R.id.nav_giulia)
+        NOTIFICATION_GIULIA_VIEW_TOGGLE -> toggleNavigationItem(GIULIA_VIEW_ID, R.id.navigation_giulia)
         NOTIFICATION_GRAPH_VIEW_TOGGLE -> toggleNavigationItem(GRAPH_VIEW_ID, R.id.nav_graph)
         NOTIFICATION_DASH_VIEW_TOGGLE -> toggleNavigationItem(DASH_VIEW_ID, R.id.nav_dashboard)
         NOTIFICATION_GAUGE_VIEW_TOGGLE -> toggleNavigationItem(GAUGE_VIEW_ID, R.id.navigation_gauge)

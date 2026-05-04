@@ -90,7 +90,7 @@ android {
             resValue "string", "DEFAULT_PROFILE", "profile_1"
             resValue "string", "applicationId", "br.com.vwup.obdgraphs"
             applicationId "br.com.vwup.obdgraphs"
-            versionCode 7
+            versionCode 12
         }
     }
 

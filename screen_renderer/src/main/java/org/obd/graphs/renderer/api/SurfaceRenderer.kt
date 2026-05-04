@@ -97,6 +97,7 @@ interface SurfaceRenderer {
                 SurfaceRendererType.TRIP_INFO -> TripInfoSurfaceRenderer(context, settings, metricsCollector, fps)
                 SurfaceRendererType.PERFORMANCE -> PerformanceSurfaceRenderer(context, settings, metricsCollector, fps)
                 SurfaceRendererType.GTI -> GtiSurfaceRenderer(context, settings, metricsCollector, fps)
+                else -> GiuliaSurfaceRenderer(context, settings, metricsCollector, fps)
             }
     }
 }

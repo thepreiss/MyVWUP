@@ -90,7 +90,8 @@ internal class SurfaceRendererScreen(
             SurfaceRendererType.TRIP_INFO to settings,
             SurfaceRendererType.DRAG_RACING to settings,
             SurfaceRendererType.PERFORMANCE to settings,
-            SurfaceRendererType.GTI to settings
+            SurfaceRendererType.GTI to settings,
+            SurfaceRendererType.DIAGNOSTICS to settings
         ),
         fps
     )
@@ -203,7 +204,7 @@ internal class SurfaceRendererScreen(
         }
     }
 
-    fun isSurfaceRendererScreen(identity: Identity) = identity is SurfaceRendererType
+    fun isSurfaceRendererScreen(identity: Identity) = identity is SurfaceRendererType && identity != SurfaceRendererType.DIAGNOSTICS
 
     override fun getFeatureDescription(): List<FeatureDescription> =
         mutableListOf(
@@ -226,6 +227,11 @@ internal class SurfaceRendererScreen(
                 SurfaceRendererType.GIULIA,
                 R.drawable.action_giulia_metics,
                 stringProvider.getString(R.string.available_features_giulia_screen_title)
+            ),
+            FeatureDescription(
+                SurfaceRendererType.DIAGNOSTICS,
+                R.drawable.action_giulia,
+                stringProvider.getString(R.string.available_features_diagnostics_screen_title)
             )
         ).apply {
             if (settings.getTripInfoScreenSettings().viewEnabled) {

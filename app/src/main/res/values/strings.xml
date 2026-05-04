@@ -14,25 +14,32 @@
     <string name="permissions.missing.bt_msg">Granting Bluetooth permissions is necessary to establish a connection with the BT adapter.</string>
 
     <string name="app_name">My UP</string>
-    <string name="navigation.title_gauge">Gauge</string>
-    <string name="navigation.title_giulia">Giulia</string>
-    <string name="navigation.title_preferences">Prefs</string>
-    <string name="navigation.title_dashboard">Dashboard</string>
+    <string name="navigation.title_gauge">Monitor GTI</string>
+    <string name="navigation.title_giulia">Diagnóstico</string>
+    <string name="navigation.title_diagnostics">Diagnóstico</string>
+    <string name="navigation.title_preferences">Configurações</string>
+    <string name="navigation.title_dashboard">Painel</string>
 
-    <string name="navigation.title_UP">UP</string>
-    <string name="navigation.title_drag_racing">Drag Racing</string>
-    <string name="navigation.title_trip_info">Trip Info</string>
-    <string name="navigation.title_performance">Performance</string>
+    <string name="navigation.title_UP">Monitor GTI</string>
+    <string name="navigation.title_drag_racing">Performance</string>
+    <string name="navigation.title_trip_info">Viagem</string>
+    <string name="navigation.title_performance">Telemetria</string>
 
-    <string name="navigation.title_graph">Graph</string>
+    <string name="navigation.title_graph">Gráficos</string>
     <string name="navigation.title_aa">Android Auto</string>
-    <string name="navigation.tooltip_gauge">Gauge view</string>
-    <string name="navigation.tooltip_giulia_dashboard">Giulia dashboard view</string>
-    <string name="navigation.tooltip_preferences">Preferences view</string>
-    <string name="navigation.tooltip_dashboard">Dashboard view</string>
-    <string name="navigation.tooltip_UP_dashboard">UP dashboard view</string>
+    <string name="navigation.tooltip_gauge">Monitor GTI</string>
+    <string name="navigation.tooltip_giulia_dashboard">Diagnóstico</string>
+    <string name="navigation.tooltip_preferences">Configurações</string>
+    <string name="navigation.tooltip_dashboard">Painel</string>
+    <string name="navigation.tooltip_UP_dashboard">Monitor GTI</string>
 
-    <string name="navigation.tooltip_graph">Graph view</string>
+    <string name="navigation.tooltip_graph">Gráficos</string>
+
+    <string name="dtc_action_scan">INICIAR VARREDURA</string>
+    <string name="dtc_action_clear">LIMPAR MEMÓRIA</string>
+    <string name="dtc_status_scanning">Escaneando ECU...</string>
+    <string name="dtc_status_clearing">Limpando memória...</string>
+    <string name="dtc_no_errors">Nenhum erro encontrado no sistema.</string>
 
 
     <string name="pid.metric_name">Metric</string>

@@ -81,8 +81,28 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
     private var itemsSortOrder: Map<Long, Int>? = emptyMap()
     private val dragRacingScreenSettings = DragRacingScreenSettings()
     
-    private val gtiCyclePids = listOf(1002L, 0L, 52L, 12L, 5L, 13L, 35L, 66L, 7003L, 4L, 17L, 15L, 82L, 60L) 
-    // Turbo (Post IC), RPM, Coolant, Speed, Intake, Battery, Oil Temp
+    // Fixed list of PIDs available for rotation in the GTI Monitor.
+    // Index 0 is always G-Force (0L).
+    // Order: G-Force, RPM, Coolant, Turbo, Load, Throttle, IAT, Speed, Timing, Fuel Press, Voltage, STFT, LTFT, Lambda, Fuel Level, Ethanol
+    private val gtiCyclePids: List<Long>
+        get() = listOf(
+            0L,    // 0: G-Force
+            12L,   // 1: RPM
+            5L,    // 2: Arrefecimento
+            1002L, // 3: Turbo (boost)
+            4L,    // 4: Carga
+            17L,   // 5: Borboleta
+            15L,   // 6: Admissão
+            13L,   // 7: Velocidade
+            14L,   // 8: Avanço
+            35L,   // 9: Pressão Combustível
+            66L,   // 10: Voltagem
+            6L,    // 11: STFT
+            7L,    // 12: LTFT
+            52L,   // 13: Sonda Lambda
+            47L,   // 14: Nível Tanque
+            82L    // 15: Etanol
+        )
 
     private val gtiScreenSettings: GtiScreenSettings = object: GtiScreenSettings() {
         override fun setVirtualScreen(id: Int) {
@@ -234,13 +254,15 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
     }
 
     override fun getGtiScreenSettings(): GtiScreenSettings = gtiScreenSettings.apply {
-        val leftIdx = Prefs.getInt("pref.aa.gti.pids.left.idx", 0)
-        val centerIdx = Prefs.getInt("pref.aa.gti.pids.center.idx", 1) // Default to Turbo
-        val rightIdx = Prefs.getInt("pref.aa.gti.pids.right.idx", 3)  // Default to Coolant
-        
-        leftPid = gtiCyclePids.getOrElse(leftIdx % gtiCyclePids.size) { 0L }
-        centerPid = gtiCyclePids.getOrElse(centerIdx % gtiCyclePids.size) { 1002L }
-        rightPid = gtiCyclePids.getOrElse(rightIdx % gtiCyclePids.size) { 5L }
+        val cycle = gtiCyclePids
+        // Defaults: Left=RPM(1), Center=Turbo(3), Right=Coolant(2)
+        val leftIdx = Prefs.getInt("pref.aa.gti.pids.left.idx", 1)
+        val centerIdx = Prefs.getInt("pref.aa.gti.pids.center.idx", 3)
+        val rightIdx = Prefs.getInt("pref.aa.gti.pids.right.idx", 2)
+
+        leftPid = cycle.getOrElse(leftIdx % cycle.size) { 12L }
+        centerPid = cycle.getOrElse(centerIdx % cycle.size) { 1002L }
+        rightPid = cycle.getOrElse(rightIdx % cycle.size) { 5L }
     }
 
     fun rotateGtiGauge(slot: Int) {

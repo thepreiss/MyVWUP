@@ -97,7 +97,11 @@ internal class DiagnosticTroubleCodeViewAdapter internal constructor(
             return
         } else {
             holder.code.setText(formattedCode, COLOR_CARDINAL, Typeface.BOLD, 1f)
-            if (isUnknown) {
+            
+            val tsiHint = getTSIHint(dtc.standardCode)
+            if (tsiHint != null) {
+                holder.description.setText("$finalDescription\n\n💡 Dica TSI: $tsiHint", Color.parseColor("#FFD700"), Typeface.BOLD, 1f)
+            } else if (isUnknown) {
                 holder.description.setText(finalDescription, Color.GRAY, Typeface.ITALIC, 1f)
             } else {
                 holder.description.setText(finalDescription, Color.DKGRAY, Typeface.NORMAL, 1f)
@@ -168,6 +172,18 @@ internal class DiagnosticTroubleCodeViewAdapter internal constructor(
                     Toast.LENGTH_SHORT
                 ).show()
         }
+    }
+
+    private fun getTSIHint(code: String): String? = when (code) {
+        "P0299" -> "Pressão de turbo baixa. Verifique mangueiras de intercooler ou a Wastegate (comum em TSI)."
+        "P00AF" -> "Atuador da Turbina com falha. Pode ser necessário ajuste ou troca do braço do atuador."
+        "P0300", "P0301", "P0302", "P0303", "P0304" -> "Falha de ignição. Verifique as bobinas e as velas (recomenda-se grau 8 ou 9 para remap)."
+        "P0420" -> "Eficiência do catalisador baixa. Comum se estiver usando Downpipe sem espaçador de sonda."
+        "P2015" -> "Falha no sensor de posição do coletor de admissão. Problema comum de carbonização ou sensor."
+        "P0171" -> "Mistura pobre. Pode ser entrada de ar falsa (MAF) ou bicos injetores sujos."
+        "P0011" -> "Sincronismo do comando de válvulas. Verifique o nível de óleo ou a válvula N205."
+        "P0507" -> "Marcha lenta muito alta. Geralmente relacionado à válvula PCV (separador de óleo) rompida."
+        else -> null
     }
 
     inner class ViewHolder internal constructor(
