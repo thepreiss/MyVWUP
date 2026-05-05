@@ -141,25 +141,9 @@ open class GtiScreenSettings : VirtualScreenConfig {
     override val selectedPIDs: Set<Long>
         get() = setOf(
             leftPid, centerPid, rightPid,
-            // Support PIDs needed for calculations (barometric pressure for Turbo)
-            51L,   // Baro pressure (used by PID 1002 formula)
-            11L,   // MAP (used for raw boost calc)
-            // All cycle PIDs so polling covers full rotation range
-            12L,   // RPM
-            5L,    // Coolant
-            1002L, // Turbo
-            4L,    // Engine Load
-            17L,   // Throttle
-            15L,   // IAT
-            13L,   // Speed
-            14L,   // Timing
-            35L,   // Fuel Pressure
-            66L,   // Voltage
-            6L,    // STFT
-            7L,    // LTFT
-            52L,   // Lambda
-            47L,   // Fuel Level
-            82L    // Ethanol
+            12L, 14L, 4L, 15L, 5L, 1002L, 17L, 6L, 
+            7L, 66L, 33L, 67L, 13L, 47L, 69L, 49L, 
+            71L, 51L, 35L, 52L, 82L, 11L
         )
 
     override fun getPIDsSortOrder(): Map<Long, Int>? = emptyMap()

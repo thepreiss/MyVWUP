@@ -28,6 +28,7 @@ android {
             it.excludes += "META-INF/notice.txt"
             it.excludes += "META-INF/ASL2.0"
             it.excludes += "META-INF/*.kotlin_module"
+            it.pickFirsts += "extra.json"
         }
     }
 
@@ -90,7 +91,7 @@ android {
             resValue "string", "DEFAULT_PROFILE", "profile_1"
             resValue "string", "applicationId", "br.com.vwup.obdgraphs"
             applicationId "br.com.vwup.obdgraphs"
-            versionCode 12
+            versionCode 24
         }
     }
 

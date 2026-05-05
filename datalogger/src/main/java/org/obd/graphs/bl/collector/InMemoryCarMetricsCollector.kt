@@ -130,6 +130,7 @@ internal class InMemoryCarMetricsCollector : MetricsCollector {
         metrics[key]?.let { metric ->
             metric.source = input
             metric.value = input.value
+            Log.d(LOG_TAG, "Updating PID=$key with value=${metric.value}")
 
             if (input.isLowerAlert) {
                 metric.inLowerAlertRisedHist = true

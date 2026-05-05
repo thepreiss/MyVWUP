@@ -48,6 +48,9 @@ class GtiDrawer(
 
     private var lastX = 0f
     private var lastY = 0f
+    private var peakX = 0f
+    private var peakY = 0f
+    private var peakMagnitude = 0f
 
     private val matrix = Matrix()
     private val targetRect = RectF()
@@ -110,35 +113,61 @@ class GtiDrawer(
 
         // --- Calculate Ball Position with Clamping ---
         val maxG = 1.0f
-        var targetX = (gX / maxG) * innerR
-        var targetY = (gY / maxG) * innerR
-
-        val currentG = hypot(gX, gY)
+        val ballRadius = radius * 0.08f
+        val clampR = innerR - ballRadius // Stay strictly inside
         
-        // Defensive clamping
+        var targetX = (gX / maxG) * clampR
+        var targetY = (gY / maxG) * clampR
+
+        val currentMag = hypot(gX, gY)
+        if (currentMag > peakMagnitude) {
+            peakMagnitude = currentMag
+            peakX = targetX
+            peakY = targetY
+        } else {
+            // Slow decay for the peak
+            peakMagnitude *= 0.995f 
+            if (peakMagnitude < 0.05f) peakMagnitude = 0f
+        }
+
+        // Defensive clamping for current position
         val dist = hypot(targetX, targetY)
-        if (dist > innerR) {
-            val scale = innerR / dist
+        if (dist > clampR) {
+            val scale = clampR / dist
             targetX *= scale
             targetY *= scale
         }
 
+        // --- Draw Peak Indicator ---
+        if (peakMagnitude > 0.1f) {
+            gBallPaint.color = Color.argb(120, 255, 200, 0) // Amber ghost
+            canvas.drawCircle(cx + peakX, cy + peakY, ballRadius * 0.5f, gBallPaint)
+        }
+
         // --- Draw Trail (Ghost Ball) ---
-        gBallPaint.alpha = 100
-        canvas.drawCircle(cx + lastX, cy + lastY, radius * 0.06f, gBallPaint)
+        gBallPaint.color = Color.RED
+        gBallPaint.alpha = 60
+        canvas.drawCircle(cx + lastX, cy + lastY, ballRadius * 0.8f, gBallPaint)
         gBallPaint.alpha = 255
         
         lastX = targetX
         lastY = targetY
 
-        // --- Draw Main Ball ---
-        gBallPaint.setShadowLayer(20f, 0f, 0f, Color.RED)
-        canvas.drawCircle(cx + targetX, cy + targetY, radius * 0.08f, gBallPaint)
+        // --- Draw Main Ball with Glow ---
+        gBallPaint.setShadowLayer(15f, 0f, 0f, Color.RED)
+        canvas.drawCircle(cx + targetX, cy + targetY, ballRadius, gBallPaint)
         gBallPaint.clearShadowLayer()
+        
+        // Inner white dot for "3D" effect
+        gBallPaint.color = Color.WHITE
+        gBallPaint.alpha = 150
+        canvas.drawCircle(cx + targetX - ballRadius * 0.3f, cy + targetY - ballRadius * 0.3f, ballRadius * 0.2f, gBallPaint)
+        gBallPaint.alpha = 255
+        gBallPaint.color = Color.RED
 
-        // --- Draw Value (Moved below to avoid overlap) ---
+        // --- Draw Value ---
         gtiValuePaint.textSize = radius * 0.35f
-        val gValueText = String.format("%.2f", currentG).replace(".", ",")
+        val gValueText = String.format("%.2f", currentMag).replace(".", ",")
         canvas.drawText(gValueText, cx, cy + innerR + (radius * 0.5f), gtiValuePaint)
         
         gtiValuePaint.textSize = radius * 0.12f
@@ -147,7 +176,7 @@ class GtiDrawer(
 
     private fun renderObd(canvas: Canvas, metric: Metric?, cx: Float, cy: Float, radius: Float, label: String, pidId: Long, customValue: Double? = null) {
         // ---- Sensor type flags driven strictly by pidId ----
-        val isTurbo   = pidId == 1002L  // customValue, so no pid object
+        val isTurbo   = pidId == 1002L  // customValue or extra.json PID
         val isRpm     = pidId == 12L
         val isTiming  = pidId == 14L
 
@@ -161,11 +190,18 @@ class GtiDrawer(
         val max: Double = when {
             isTurbo  -> 2.5
             isRpm    -> 7000.0  // safety cap to prevent scale compression
+            pidId == 35L || pidId == 58L -> 200.0 // VW Up TSI high pressure rail maxes around 200 bar
+            pidId == 16L -> 120.0 // Max MAF is ~100 g/s for 1.0 engine
             else     -> metric?.pid?.max?.toDouble() ?: 100.0
         }
 
         // ---- Current value ----
-        val current = customValue ?: (metric?.value?.toString()?.toDoubleOrNull() ?: 0.0)
+        var current = customValue ?: (metric?.value?.toString()?.toDoubleOrNull() ?: 0.0)
+
+        // Fix for MAF (16L) returning raw unscaled value from some ECUs
+        if (pidId == 16L && current > 200.0) {
+            current /= 100.0
+        }
 
         // ---- Value text ----
         val valueText: String = when {
@@ -177,10 +213,10 @@ class GtiDrawer(
             pidId == 33L || pidId == 49L || pidId == 82L ||
             pidId == 94L || pidId == 11L ->
                 String.format("%.0f", current)
-            // One decimal for temperatures and small float values
+            // One decimal for temperatures, small float values, and MAF
             pidId == 5L || pidId == 15L || pidId == 60L ||
             pidId == 66L || pidId == 52L || pidId == 20L ||
-            pidId == 68L || pidId == 102L ->
+            pidId == 68L || pidId == 102L || pidId == 16L ->
                 String.format("%.1f", current)
             // Two decimals for turbo/fuel pressure/lambda/timing
             isTurbo || pidId == 35L || pidId == 58L || isTiming ||

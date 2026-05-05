@@ -101,7 +101,9 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
             7L,    // 12: LTFT
             52L,   // 13: Sonda Lambda
             47L,   // 14: Nível Tanque
-            82L    // 15: Etanol
+            82L,   // 15: Etanol
+            51L,   // 16: Atmosférica (Necessário para Turbo)
+            11L    // 17: MAP (Necessário para Turbo)
         )
 
     private val gtiScreenSettings: GtiScreenSettings = object: GtiScreenSettings() {
@@ -109,6 +111,9 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
             // Not used for individual rotation
         }
         override fun getVirtualScreen(): Int = 0
+        
+        override val selectedPIDs: Set<Long>
+            get() = gtiCyclePids.toSet()
     }
     private val colorTheme = ColorTheme()
 
@@ -158,26 +163,45 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
     
     private fun initGaugesDefaultProfiles() {
         // Migration/Reset to ensure we use correct IDs and data types
-        if (Prefs.getInt("pref.aa.pids.init.version", 0) < 8) {
-            val p1 = listOf(12L, 13L, 11L, 4L, 17L, 15L) // Performance: RPM, Speed, Intake, Load, Throttle, Intake Air
-            val p2 = listOf(5L, 60L, 66L, 82L, 51L, 35L) // Health: Coolant, Catalyst, Battery, Ethanol, Baro, Fuel Pressure
-
-            Prefs.updateLongSet("pref.aa.gauge.pids.profile_1", p1)
-            Prefs.updateLongSet("pref.aa.gauge.pids.profile_2", p2)
-            Prefs.updateLongSet("pref.aa.pids.profile_1", p1)
-            Prefs.updateLongSet("pref.aa.pids.profile_2", p2)
+        if (Prefs.getInt("pref.aa.pids.init.version", 0) < 15) {
+            Log.i(LOG_TAG, "Applying migration to version 15")
+            val cleanResources = listOf("mode01.json", "mode01_2.json", "extra.json")
+            Prefs.updateStringSet("pref.pids.registry.list", cleanResources)
+            Prefs.updateStringSet("profile_1.pref.pids.registry.list", cleanResources)
+            Prefs.updateStringSet("profile_2.pref.pids.registry.list", cleanResources)
             
+            // Define 8 tabs for the smartphone gauges (matching what works in AA)
+            val tab1 = listOf(12L, 1002L, 5L, 15L, 13L, 14L)
+            val tab2 = listOf(4L, 67L, 17L, 69L, 73L, 74L)
+            val tab3 = listOf(11L, 51L, 1002L, 35L, 58L)
+            val tab4 = listOf(5L, 15L, 60L, 66L)
+            val tab5 = listOf(52L, 102L, 6L, 7L)
+            val tab6 = listOf(47L, 82L, 13L, 33L, 49L)
+            val tab7 = listOf(71L, 78L, 94L, 20L)
+            val tab8 = listOf(12L, 1002L, 11L, 4L)
+
+            val allTabs = listOf(tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8)
+            allTabs.forEachIndexed { index, list ->
+                val suffix = "${index + 1}"
+                Prefs.updateLongSet("profile_1.pref.gauge.pids.selected.$suffix", list)
+                Prefs.updateLongSet("pref.gauge.pids.selected.$suffix", list)
+            }
+
             Prefs.updateLongSet("pref.aa.trip_info.pids.selected", listOf(13L, 12L, 5L, 11L, 47L, 66L))
+            
+            val p1 = listOf(12L, 13L, 11L, 4L, 17L, 15L) 
+            val p2 = listOf(5L, 60L, 66L, 82L, 51L, 35L) 
             Prefs.updateLongSet("pref.aa.performance.pids.selected", p1 + p2)
             
             // Map them to top and bottom sections for Performance Screen
-            val topPerfPids = listOf(13L, 7003L, 60L) // Speed, Oil Temp, Catalyst
-            val bottomPerfPids = listOf(12L, 11L, 4L) // RPM, Turbo (Intake), Load
+            val topPerfPids = listOf(13L, 5L, 60L) 
+            val bottomPerfPids = listOf(12L, 1002L, 4L) 
             
             Prefs.updateLongSet("pref.query.performance.top", topPerfPids)
             Prefs.updateLongSet("pref.query.performance.bottom", bottomPerfPids)
             
-            Prefs.updateInt("pref.aa.pids.init.version", 8)
+            Prefs.updateInt("pref.aa.pids.init.version", 15)
+            Prefs.updateInt("profile_1.pref.aa.pids.init.version", 15)
         }
     }
 
@@ -259,7 +283,7 @@ class CarSettings(private val carContext: CarContext) : ScreenSettings {
         val leftIdx = Prefs.getInt("pref.aa.gti.pids.left.idx", 1)
         val centerIdx = Prefs.getInt("pref.aa.gti.pids.center.idx", 3)
         val rightIdx = Prefs.getInt("pref.aa.gti.pids.right.idx", 2)
-
+ 
         leftPid = cycle.getOrElse(leftIdx % cycle.size) { 12L }
         centerPid = cycle.getOrElse(centerIdx % cycle.size) { 1002L }
         rightPid = cycle.getOrElse(rightIdx % cycle.size) { 5L }

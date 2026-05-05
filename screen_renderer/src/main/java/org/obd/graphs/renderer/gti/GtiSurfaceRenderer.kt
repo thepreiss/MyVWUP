@@ -7,6 +7,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import org.obd.graphs.bl.collector.MetricsCollector
 import org.obd.graphs.renderer.AbstractSurfaceRenderer
 import org.obd.graphs.renderer.api.Fps
@@ -60,69 +61,75 @@ class GtiSurfaceRenderer(
             drawer.drawHeader(canvas, area, headerHeight)
 
             val metrics = metricsCollector.getMetrics()
-            val baro = metrics.find { it.pid.id == 51L }?.value?.toString()?.toDoubleOrNull() ?: 1.0
             val gtiSettings = settings.getGtiScreenSettings()
-
+ 
             // Draw Gauges
-            drawGtiGauge(canvas, metrics, gtiSettings.leftPid, cx1, cy, baro)
-            drawGtiGauge(canvas, metrics, gtiSettings.centerPid, cx2, cy, baro)
-            drawGtiGauge(canvas, metrics, gtiSettings.rightPid, cx3, cy, baro)
+            val centerMetric = metrics.find { it.pid.id == gtiSettings.centerPid }
+            Log.d("GtiRenderer", "Drawing Center PID=${gtiSettings.centerPid} with value=${centerMetric?.value}")
+            drawGtiGauge(canvas, metrics, gtiSettings.leftPid, cx1, cy)
+            drawGtiGauge(canvas, metrics, gtiSettings.centerPid, cx2, cy)
+            drawGtiGauge(canvas, metrics, gtiSettings.rightPid, cx3, cy)
         }
     }
 
-    private fun drawGtiGauge(canvas: Canvas, metrics: List<org.obd.graphs.bl.collector.Metric>, pidId: Long, cx: Float, cy: Float, baro: Double) {
+    private fun drawGtiGauge(canvas: Canvas, metrics: List<org.obd.graphs.bl.collector.Metric>, pidId: Long, cx: Float, cy: Float) {
         if (pidId == 0L) {
             drawer.drawGauge(canvas, null, cx, cy, gaugeRadius, "G-FORCE", type = "GFORCE", gX = gForceX, gY = gForceY)
             return
         }
 
         val metric = metrics.find { it.pid.id == pidId }
-        var customValue: Double? = null
-
-        // Only Turbo needs a runtime calculation (MAP - Baro = boost pressure).
-        // All other PIDs already have their formula applied via extra.json.
-        if (pidId == 1002L) {
-            val manifold = metrics.find { it.pid.id == 11L }?.value?.toString()?.toDoubleOrNull() ?: baro
-            customValue = (manifold - baro).coerceAtLeast(-1.0)
-        }
-
-        drawer.drawGauge(canvas, metric, cx, cy, gaugeRadius, getLabel(pidId), pidId = pidId, customValue = customValue)
+        drawer.drawGauge(canvas, metric, cx, cy, gaugeRadius, getLabel(pidId, metric), pidId = pidId)
     }
 
-    private fun getLabel(pid: Long): String = when(pid) {
-        1002L -> "TURBO"
-        35L -> "PRESSÃO COMBUSTÍVEL"
-        58L -> "PRESSÃO ALTA"
-        12L -> "RPM"
-        4L -> "CARGA"
-        67L -> "CARGA ABSOLUTA"
-        17L -> "BORBOLETA"
-        69L -> "BORBOLETA RELATIVA"
-        71L -> "BORBOLETA ABS B"
-        66L -> "VOLTAGEM"
-        5L -> "ARREFECIMENTO"
-        15L -> "ADMISSÃO"
-        60L -> "CATALISADOR"
-        82L -> "ETANOL"
-        13L -> "VELOCIDADE"
-        14L -> "AVANÇO"
-        52L -> "SONDA 1 RAZÃO"
-        102L -> "SONDA 1 CORRENTE"
-        20L -> "SONDA 2 TENSÃO"
-        6L -> "STFT"
-        7L -> "LTFT"
-        47L -> "NÍVEL TANQUE"
-        70L -> "AMBIENTE"
-        73L -> "PEDAL D"
-        74L -> "PEDAL E"
-        78L -> "ATUADOR"
-        11L -> "MAP"
-        33L -> "DISTÂNCIA MIL"
-        48L -> "WARM-UPS"
-        49L -> "DISTÂNCIA CLEAR"
-        68L -> "AR/COMB COMANDADO"
-        94L -> "PURGA EVAP"
-        else -> metricsCollector.getMetrics().find { it.pid.id == pid }?.pid?.description?.uppercase() ?: "PID $pid"
+    private fun getLabel(pid: Long, metric: org.obd.graphs.bl.collector.Metric?): String {
+        val customLabel = when(pid) {
+            1002L -> "TURBO"
+            35L -> "PRESSÃO COMBUSTÍVEL"
+            58L -> "PRESSÃO ALTA"
+            12L -> "RPM"
+            4L -> "CARGA MOTOR"
+            67L -> "CARGA ABSOLUTA"
+            17L -> "BORBOLETA"
+            69L -> "BORBOLETA RELATIVA"
+            71L -> "BORBOLETA ABS"
+            66L -> "VOLTAGEM"
+            5L -> "ARREFECIMENTO"
+            15L -> "ADMISSÃO"
+            60L -> "CATALISADOR"
+            82L -> "ETANOL"
+            13L -> "VELOCIDADE"
+            14L -> "AVANÇO"
+            52L -> "SONDA 1 RAZÃO"
+            102L -> "SONDA 1 CORRENTE"
+            20L -> "SONDA 2 TENSÃO"
+            6L -> "STFT"
+            7L -> "LTFT"
+            47L -> "NÍVEL TANQUE"
+            51L -> "ATMOSFÉRICA"
+            73L -> "PEDAL D"
+            74L -> "PEDAL E"
+            78L -> "ATUADOR"
+            11L -> "MAP"
+            33L -> "DISTÂNCIA MIL"
+            48L -> "WARM-UPS"
+            49L -> "DISTÂNCIA CLEAR"
+            68L -> "AR/COMB COMANDADO"
+            94L -> "PURGA EVAP"
+            16L -> "MAF AIR RATE"
+            else -> ""
+        }
+
+        if (customLabel.isNotEmpty()) {
+            return customLabel
+        }
+
+        val description = metric?.pid?.description ?: ""
+        if (description.isNotEmpty()) {
+            return description.uppercase()
+        }
+
+        return "PID $pid"
     }
 
     private fun updateLayout(area: Rect) {
@@ -146,8 +153,8 @@ class GtiSurfaceRenderer(
                 val latG = it.values[0] / gravity
                 val lonG = it.values[1] / gravity
 
-                // --- Stage 1: Pre-filter (Agressive noise reduction for vibrations) ---
-                val preFilterGain = 0.08f
+                // --- Stage 1: Pre-filter (Aggressive noise reduction for vibrations) ---
+                val preFilterGain = 0.05f
                 rawGX = rawGX * (1f - preFilterGain) + latG * preFilterGain
                 rawGY = rawGY * (1f - preFilterGain) + lonG * preFilterGain
 
@@ -157,18 +164,18 @@ class GtiSurfaceRenderer(
                 
                 val magnitude = sqrt(finalX * finalX + finalY * finalY)
                 
-                // Dead zone (0.03G)
-                if (magnitude < 0.03f) {
+                // Dead zone (0.05G) to avoid jitter at idle
+                if (magnitude < 0.05f) {
                     finalX = 0f
                     finalY = 0f
-                } else if (magnitude > 1.0f) {
-                    // Polar clamping: keep direction, limit magnitude to 1.0G
-                    finalX *= (1.0f / magnitude)
-                    finalY *= (1.0f / magnitude)
+                } else if (magnitude > 1.2f) { // Allow slightly more than 1.0G for peaks
+                    // Polar clamping: keep direction, limit magnitude
+                    finalX *= (1.2f / magnitude)
+                    finalY *= (1.2f / magnitude)
                 }
 
                 // --- Stage 3: Display Filter (Smooth visual movement) ---
-                val displayFilterGain = 0.20f
+                val displayFilterGain = 0.15f
                 gForceX = gForceX * (1f - displayFilterGain) + finalX * displayFilterGain
                 gForceY = gForceY * (1f - displayFilterGain) + finalY * displayFilterGain
             }

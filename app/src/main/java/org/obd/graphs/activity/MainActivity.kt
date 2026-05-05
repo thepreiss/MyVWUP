@@ -52,6 +52,7 @@ import org.obd.graphs.bl.gps.gpsMetricsEmitter
 import org.obd.graphs.bl.trip.tripManager
 import org.obd.graphs.integrations.gcp.gdrive.TripLogDriveManager
 import org.obd.graphs.language.LanguageManager
+import org.obd.graphs.preferences.Prefs
 import org.obd.graphs.preferences.setPreferencesContext
 import org.obd.graphs.profile.profile
 import org.obd.graphs.sendBroadcastEvent
@@ -140,7 +141,42 @@ class MainActivity :
             AutoConnect.schedule(this)
         }
 
+        setupPreferenceMigration()
         isAppReady = true
+    }
+
+    private fun setupPreferenceMigration() {
+        val version = Prefs.getInt("pref.aa.pids.init.version", 0)
+        if (version < 16) {
+            Log.i(LOG_TAG, "Applying migration to version 16 (Smartphone)")
+            val cleanResources = listOf("mode01.json", "mode01_2.json", "extra.json")
+            Prefs.edit().let { editor ->
+                editor.putStringSet("pref.pids.registry.list", cleanResources.toSet())
+                editor.putStringSet("profile_1.pref.pids.registry.list", cleanResources.toSet())
+                
+                // Define 8 tabs for the smartphone gauges
+                val tabs = listOf(
+                    listOf(12L, 1002L, 5L, 15L, 13L, 14L),   // Tab 1
+                    listOf(4L, 67L, 17L, 69L, 73L, 74L),    // Tab 2
+                    listOf(11L, 51L, 1002L, 35L, 58L),      // Tab 3
+                    listOf(5L, 15L, 60L, 66L),               // Tab 4
+                    listOf(52L, 102L, 6L, 7L),               // Tab 5
+                    listOf(47L, 82L, 13L, 33L, 49L),         // Tab 6
+                    listOf(71L, 78L, 94L, 20L),              // Tab 7
+                    listOf(12L, 1002L, 11L, 4L)              // Tab 8
+                )
+
+                tabs.forEachIndexed { index: Int, list: List<Long> ->
+                    val suffix = "${index + 1}"
+                    val stringSet = list.map { it.toString() }.toSet()
+                    editor.putStringSet("profile_1.pref.gauge.pids.selected.$suffix", stringSet)
+                    editor.putStringSet("pref.gauge.pids.selected.$suffix", stringSet)
+                }
+                
+                editor.putInt("pref.aa.pids.init.version", 16)
+                editor.apply()
+            }
+        }
     }
 
     private fun setupStatusPanel() {
